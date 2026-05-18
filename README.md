@@ -29,7 +29,6 @@ El índice final se normaliza mediante una síntesis matemática en una escala e
 Este desarrollo tecnológico representa la transferencia práctica de un ecosistema de investigación de frontera que cuenta con:
 * **12 Investigaciones y Papers Indexables** distribuidos en plataformas globales como **SSRN (Elsevier)** y catálogos de arbitraje formal como **Dialnet**.
 * Base de datos metodológica fundacional en proceso de curación en **Harvard Dataverse** (Índice ODADI, 2026).
-* Proyecto postulado al **Premio al Mérito Juvenil** en la categoría de Desarrollo Político y Académico.
 
 ---
 **Autora:** Laura Pamela Aranda Medrano  
