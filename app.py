@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# 2. INYECCIÓN DE VIDEO TOTALMENTE EXPANDIDO (FULL SCREEN & GLASSMORPHISM)
+# 2. INYECCIÓN AGRESIVA DE VIDEO EN PANTALLA COMPLETA TOTAL (Fuerza Bruta CSS)
 video_path = "assets/globo_futurista.mp4"
 
 if os.path.exists(video_path):
@@ -23,41 +23,52 @@ if os.path.exists(video_path):
     
     st.markdown(f"""
         <style>
-        /* Fuerza al video a abarcar absolutamente toda la pantalla sin importar el scroll */
+        /* 1. Forzar al video a ocupar el 100% real de la ventana del navegador */
         #background-video {{
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            object-fit: cover; /* Estira el video para llenar toda la pantalla sin deformarse */
-            z-index: -100;
-            opacity: 0.35; /* Intensidad ideal del globo de fondo */
+            object-fit: cover;
+            z-index: -9999; /* Lo mandamos al fondo absoluto */
+            opacity: 0.35;
+            pointer-events: none; /* Evita que estorbe al hacer clics en la app */
         }}
         
-        /* ¡ELIMINA LOS MÁRGENES Y PADDINGS DE STREAMLIT! */
-        .stApp, .stMain, [data-testid="stVerticalBlock"], [data-testid="stHeader"], [data-testid="stCanvasBlock"] {{
+        /* 2. FUERZA BRUTA: Volvemos transparente ABSOLUTAMENTE TODO el esqueleto de Streamlit */
+        .stApp, 
+        .stMain, 
+        .stMainBlockContainer,
+        [data-testid="stApp"], 
+        [data-testid="stHeader"], 
+        [data-testid="stMain"],
+        [data-testid="stVerticalBlock"], 
+        [data-testid="stCanvasBlock"],
+        [data-testid="stMainBlockContainer"],
+        div[role="main"], 
+        .main {{
+            background: transparent !important;
             background-color: transparent !important;
-            padding-top: 0rem !important;
-            padding-bottom: 0rem !important;
-            margin: 0 !important;
+            box-shadow: none !important;
         }}
         
-        /* Remueve espacios internos del contenedor principal */
+        /* 3. Ajuste fino de márgenes para eliminar bordes blancos o negros */
         [data-testid="stMainBlockContainer"] {{
-            padding: 3rem 5rem !important; /* Espaciado elegante para que respiren las tarjetas */
+            padding: 3rem 5rem !important;
             max-width: 100% !important;
         }}
         
-        /* Panel lateral ultra estético con desenfoque de cristal (Glassmorphism) */
-        .stSidebar {{
-            background-color: rgba(10, 15, 30, 0.90) !important;
-            backdrop-filter: blur(15px);
-            border-right: 1px solid rgba(255, 255, 255, 0.08);
+        /* 4. Barra lateral con efecto Glassmorphism (único bloque opaco para contraste) */
+        .stSidebar, [data-testid="stSidebar"] {{
+            background-color: rgba(10, 15, 30, 0.93) !important;
+            backdrop-filter: blur(15px) !important;
+            border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
         }}
         </style>
+        
         <video autoplay loop muted playsinline id="background-video">
-            <source src="data:video/mp4;base64,{video_base64}" type="video/mp4">
+            <source src="data:video/mp4;base64,{video_base64}" type="type/mp4">
         </video>
     """, unsafe_allow_html=True)
 else:
@@ -99,7 +110,7 @@ st.markdown("""
 with st.sidebar:
     st.image("https://img.icons8.com/fluency/96/space-shield.png", width=70)
     st.markdown("<h3 style='margin:0; color:#FFFFFF;'>SICE-México AI</h3>", unsafe_allow_html=True)
-    st.caption("Engine v1.7 | Inmersión Pantalla Completa")
+    st.caption("Engine v1.8 | Fuerza Bruta UI")
     st.write("---")
     st.markdown("**📂 Portafolio Nacional Conectado:**")
     st.caption("✔️ `ime_2020.csv` (CONAPO)\n\n✔️ `03_iim_mex_eeuu.csv` (Migración)\n\n✔️ `usuarios_internet.csv` (INEGI)\n\n✔️ `biblioteca_aguas.csv` (CONAGUA)")
@@ -127,7 +138,7 @@ with st.expander("📖 EXPLICACIÓN CIENTÍFICA: ¿Cómo funciona la Lógica del
             <li style="margin-bottom:0.5rem;"><strong>Planetary Ethics (E):</strong> Cumplimiento estricto de límites biofísicos y sustentabilidad hidrogeológica regional.</li>
         </ul>
         <h4 style="color:#38BDF8; margin-top:1.5rem;">La Ecuación del Desequilibrio</h4>
-        <p>El modelo evalúa el riesgo territorial mediante el <strong>Coeficiente de Dispersión Dimensional ($D$)</strong> usando la desviación estándar sobre variables de fuentes oficiales:</p>
+        <p>El modelo evalúa el riesgo territorial mediante el <strong>Coeficiente de Dispersión Dimensional ($D$)</strong> usando la desviación estándar:</p>
         <p style='text-align: center; font-size: 1.4rem; background: rgba(255,255,255,0.06); padding: 1rem; border-radius: 0.5rem; margin: 1.5rem 0; color:#FFFFFF;'>
             $$D = \\sigma(S, I, C, E) = \\sqrt{\\frac{1}{4}\\sum_{i=1}^{4}(x_i - \\mu)^2}$$
         </p>
@@ -169,42 +180,41 @@ if df is not None:
     codigos_dimension = ["S", "I", "C", "E"]
     dim_fracturada_codigo = codigos_dimension[idx_ruptura]
 
-    # Asignación binaria estricta de estados lógicos
     if dispersion_D <= 4.0:
         clasificacion_sistema = "EQUILIBRIO COHERENTE (Adaptive Coherence)"
-        color_hex = "#10B981"  # Verde Esmeralda
+        color_hex = "#10B981"
         foco_diagnostico = "DÉFICIT BAJO / COHERENCE ADAPTATIVA REGIONAL"
-        analisis_teorico = f"El territorio de {estado_selector} opera dentro de un marco de balance estructural proporcional. Su índice de dispersión analítica de D = {dispersion_D:.2f} denota que ninguna dimensión está canibalizando los recursos de otra, manteniendo una distribución armónica en el ecosistema regional."
+        analisis_teorico = f"El territorio de {estado_selector} opera dentro de un marco de balance estructural proporcional. Su índice de dispersión analítica de D = {dispersion_D:.2f} denota que ninguna dimensión está canibalizando los recursos de otra."
         recom_1 = "**Preservación Dinámica del Modelo:** Institucionalizar el vector actual como línea base regulatoria para la planificación territorial estratégica."
-        recom_2 = "**Monitoreo de Fluctuación Coetánea:** Implementar auditorías de varianza semestrales para detectar desviaciones en fases tempranas antes de cruzar el umbral de fricción."
-        recom_3 = "**Optimización Estructurada:** Prohibir políticas de expansión acelerada en conectividad o industria que no demuestren un acoplamiento simétrico con las capacidades de gobernanza local."
+        recom_2 = "**Monitoreo de Fluctuación Coetánea:** Implementar auditorías de varianza semestrales para detectar desviaciones antes de cruzar el umbral de fricción."
+        recom_3 = "**Optimización Estructurada:** Prohibir políticas de expansión acelerada en conectividad que no demuestren un acoplamiento simétrico."
     else:
         clasificacion_sistema = "DISPERSIÓN CRÍTICA (Systemic Imbalance)"
-        color_hex = "#EF4444"  # Rojo Escarlata Real
+        color_hex = "#EF4444"
         
         if dim_fracturada_codigo == "E" or E < 10.0:
             foco_diagnostico = "DÉFICIT ÉTICO-ECOLÓGICO POR SATURACIÓN INDUSTRIAL"
             analisis_teorico = f"El vector de {estado_selector} muestra una severa sobreexplotación biofísica. El indicador hidrogeológico real extraído de las bases de CONAGUA ({E:.1f}/25) delata que las presiones del nearshoring transnacional están rebasando la resiliencia de las cuencas locales."
             recom_1 = "**Moratoria de Nearshoring Extractivo:** Suspender inmediatamente la entrega de licencias a corporaciones que demanden un consumo hídrico intensivo no acoplado a sistemas de ciclo cerrado."
             recom_2 = "**Monitoreo Satelital Coetáneo:** Conectar la infraestructura de sensores de CONAGUA directamente al pipeline del SICE para auditar el abatimiento de acuíferos subterráneos en tiempo real."
-            recom_3 = "**Equilibrio Planetario Mandatorio:** Anteponer los límites de supervivencia física analizados en tu obra (*When the Ground Gives Way*) sobre los incentivos comerciales externos de corto plazo."
+            recom_3 = "**Equilibrio Planetario Mandatorio:** Anteponer los límites de supervivencia física analizados en tu obra (*When the Ground Gives Way*) sobre los incentivos comerciales externos."
         elif dim_fracturada_codigo == "I":
             foco_diagnostico = "DISRUPCIÓN IDENTITARIA POR ALTA INTENSIDAD MIGRATORIA"
-            analisis_teorico = f"Los microdatos extraídos del portafolio del CONAPO detectan una fragmentación del tejido social en {estado_selector} ({I:.1f}/25). La alta intensidad migratoria transnacional genera una fuga crítica de capital social y desarraigo comunitario."
-            recom_1 = "**Políticas de Arraigo Coetáneo:** Destinar incentivos económicos y tecnológicos dirigidos a la tecnificación del campo y clústeres comunitarios en las regiones de mayor expulsión demográfica."
-            recom_2 = "**Fideicomisos de Resiliencia Social:** Estructurar un esquema de coinversión institucional con asociaciones de migrantes para transformar flujos de remesas pasivas en infraestructura de soporte (Structure)."
-            recom_3 = "**Estabilización del Entorno:** Fortalecer los mecanismos de cohesión comunitaria interna para blindar la identidad frente a choques económicos externos asimétricos."
+            analisis_teorico = f"Los microdatos extraídos del portafolio del CONAPO detectan una fragmentación del tejido social en {estado_selector} ({I:.1f}/25). La alta intensidad migratoria transnacional genera una fuga crítica de capital social."
+            recom_1 = "**Políticas de Arraigo Coetáneo:** Destinar incentivos económicos dirigidos a la tecnificación del campo y clústeres comunitarios en las regiones de expulsión demográfica."
+            recom_2 = "**Fideicomisos de Resiliencia Social:** Estructurar un esquema de coinversión institucional con asociaciones de migrantes para transformar flujos de remesas en infraestructura de soporte."
+            recom_3 = "**Estabilización del Entorno:** Fortalecer los mecanismos de cohesión comunitaria interna para blindar la identidad frente a choques económicos externos."
         elif dim_fracturada_codigo == "C":
             foco_diagnostico = "DOMINANCIA ASIMÉTRICA DE CONECTIVIDAD DIGITAL"
-            analisis_teorico = f"La entidad registra una hiper-conectividad digital ({C:.1f}/25) según los datos de la ENDUTIH-INEGI que desborda por completo sus capacidades institucionales de control ({S:.1f}/25). Existe un riesgo inminente de captura soberana de datos por agentes transnacionales."
-            recom_1 = "**Despliegue de Nodos de Red Soberana:** Mandatar que toda la metadata crítica gubernamental y económica sea procesada en infraestructuras locales bajo legislación mexicana nacional."
-            recom_2 = "**Mitigación de Dependencias:** Sustituir dependencias tecnológicas críticas por plataformas de software abierto para mitigar el control algorítmico ejercido por corporaciones extranjeras."
+            analisis_teorico = f"La entidad registra una hiper-conectividad digital ({C:.1f}/25) según los datos de la ENDUTIH-INEGI que desborda por completo sus capacidades institucionales de control ({S:.1f}/25)."
+            recom_1 = "**Despliegue de Nodos de Red Soberana:** Mandatar que toda la metadata crítica gubernamental sea procesada en infraestructuras locales bajo legislación mexicana nacional."
+            recom_2 = "**Mitigación de Dependencias:** Sustituir dependencias tecnológicas críticas por plataformas de software abierto para mitigar el control algorítmico extranjero."
             recom_3 = "**Gobernanza de Redes:** Vincular el despliegue de nueva infraestructura de conectividad a la maduración de las capacidades de auditoría del eje Structure."
         else:
             foco_diagnostico = "DEBILIDAD ESTRUCTURAL Y REZAGO DE CAPACIDAD"
-            analisis_teorico = f"El algoritmo SICE reporta una parálisis en el eje de Structure ({S:.1f}/25), fuertemente condicionado por los altos índices de marginación e ineficiencia burocrática del territorio mapeados en tus bases."
-            recom_1 = "**Automatización del Control Institucional:** Implementar la matriz determinista de balance SICE para erradicar procesos opacos y descentralizar las capacidades de respuesta pública local."
-            recom_2 = "**Inversión Proporcional Compensatoria:** Reorientar el gasto público estatal exclusivamente hacia los ejes rezagados para colapsar la dispersión matemática D a un rango seguro."
+            analisis_teorico = f"El algoritmo SICE reporta una parálisis en el eje de Structure ({S:.1f}/25), fuertemente condicionado por los altos índices de marginación e ineficiencia burocrática del territorio."
+            recom_1 = "**Automatización del Control Institucional:** Implementar la matriz determinista de balance SICE para erradicar procesos opacos y descentralizar las capacidades públicas."
+            recom_2 = "**Inversión Proporcional Compensatoria:** Reorientar el gasto público estatal exclusivamente hacia los ejes rezagados para colapsar la dispersión matemática D."
             recom_3 = "**Blindaje Normativo:** Fortalecer el marco jurídico subnacional bajo principios de realismo periférico para repeler presiones de corporativos externos."
 
     # 10. VISUALIZACIÓN DE BARRAS DIMENSIONALES SOBRE EL VIDEO
@@ -221,7 +231,7 @@ if df is not None:
         st.markdown(f"🌱 **Planetary Ethics (E): {E:.1f} / 25**")
         st.progress(E / 25)
 
-    # 11. BLOQUES MÉTRICOS ESTILIZADOS EN ALTA DIRECCIÓN
+    # 11. BLOQUES MÉTRICOS ESTILIZADOS
     st.write("##")
     cm1, cm2, cm3 = st.columns(3)
     with cm1:
@@ -235,17 +245,16 @@ if df is not None:
 
     # 12. GENERADOR DE MEMORÁNDUM EJECUTIVO PREMIUM
     st.write("### 🎛️ Centro de Inferencia Analítica Subnacional")
-    st.caption("Presione el botón para interrogar la base de conocimiento y emitir el dictamen regulatorio con el Core algorítmico.")
+    st.caption("Presione el botón para interrogar la base de conocimiento y emitir el dictamen regulatorio.")
 
     if st.button("Interrogar Nodo Territorial y Desplegar Recomendación"):
         with st.spinner("Procesando vectores moleculares territoriales..."):
             time.sleep(0.5)
             
-            # DISEÑO DE MEMORÁNDUM EN MODO CRISTAL COMPLETO
             dictamen_html = f"""
             <div class="memo-container">
                 <div class="memo-header">Dictamen de Gobernanza Predictiva SICE-AI</div>
-                <div class="memo-meta">REF ID: SICE-{estado_selector[:3].upper()}-2026-RESOLVED &nbsp;|&nbsp; EMISIÓN AUTOMATIZADA CORREGIDA</div>
+                <div class="memo-meta">REF ID: SICE-{estado_selector[:3].upper()}-2026-RESOLVED &nbsp;|&nbsp; EMISIÓN COMPLETA</div>
                 
                 <div class="memo-section-title">Eje de Ruptura Multidimensional Encontrado</div>
                 <p style="font-size: 1.35rem; font-weight: 800; color: {color_hex} !important; margin: 0.5rem 0 1.5rem 0;">
@@ -258,10 +267,10 @@ if df is not None:
                 </p>
                 
                 <div class="memo-section-title">Directrices Regulatorias de Diseño Institucional</div>
-                <ul style="padding-left: 1.5rem; margin-top: 0.5rem; color: #F8FAFC !important;">
-                    <li style="margin-bottom: 0.8rem; line-height: 1.6;">{recom_1}</li>
-                    <li style="margin-bottom: 0.8rem; line-height: 1.6;">{recom_2}</li>
-                    <li style="margin-bottom: 0.8rem; line-height: 1.6;">{recom_3}</li>
+                <ul style="padding-left: 1.5rem; margin-top: 0.5rem; color: #F8FAFC !important; list-style-type: disc;">
+                    <li style="margin-bottom: 0.8rem; line-height: 1.6; color: #FFFFFF !important;">{recom_1}</li>
+                    <li style="margin-bottom: 0.8rem; line-height: 1.6; color: #FFFFFF !important;">{recom_2}</li>
+                    <li style="margin-bottom: 0.8rem; line-height: 1.6; color: #FFFFFF !important;">{recom_3}</li>
                 </ul>
                 
                 <p style="font-size: 0.82rem; color: #64748B !important; margin-top: 3.5rem; border-top: 1px dashed rgba(255,255,255,0.15); padding-top: 1rem; font-style: italic;">
