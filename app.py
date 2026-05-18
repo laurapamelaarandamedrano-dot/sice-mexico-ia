@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# 2. INYECCIÓN AGRESIVA DE VIDEO EN PANTALLA COMPLETA TOTAL (Fuerza Bruta CSS)
+# 2. INYECCIÓN ABSOLUTA Y DESMANTELAMIENTO DE CAPAS OSCURAS (Solución Raíz)
 video_path = "assets/globo_futurista.mp4"
 
 if os.path.exists(video_path):
@@ -23,7 +23,7 @@ if os.path.exists(video_path):
     
     st.markdown(f"""
         <style>
-        /* 1. Forzar al video a ocupar el 100% real de la ventana del navegador */
+        /* 1. Forzar al video a abarcar toda la pantalla física detrás de todo */
         #background-video {{
             position: fixed;
             top: 0;
@@ -31,35 +31,30 @@ if os.path.exists(video_path):
             width: 100vw;
             height: 100vh;
             object-fit: cover;
-            z-index: -9999; /* Lo mandamos al fondo absoluto */
+            z-index: -99999 !important;
             opacity: 0.35;
-            pointer-events: none; /* Evita que estorbe al hacer clics en la app */
+            pointer-events: none;
         }}
         
-        /* 2. FUERZA BRUTA: Volvemos transparente ABSOLUTAMENTE TODO el esqueleto de Streamlit */
-        .stApp, 
-        .stMain, 
-        .stMainBlockContainer,
-        [data-testid="stApp"], 
-        [data-testid="stHeader"], 
-        [data-testid="stMain"],
-        [data-testid="stVerticalBlock"], 
-        [data-testid="stCanvasBlock"],
-        [data-testid="stMainBlockContainer"],
-        div[role="main"], 
-        .main {{
-            background: transparent !important;
+        /* 2. APAGAR EL FONDO NEGRO DE LA RAÍZ DE LA APP (El verdadero culpable) */
+        html, body, .stApp, .stAppViewMain, [data-testid="stAppViewMain"] {{
             background-color: transparent !important;
-            box-shadow: none !important;
+            background: transparent !important;
+        }}
+
+        /* 3. Volver transparentes los bloques intermedios de contenido */
+        .stMain, .stMainBlockContainer, [data-testid="stMain"], [data-testid="stHeader"] {{
+            background-color: transparent !important;
+            background: transparent !important;
         }}
         
-        /* 3. Ajuste fino de márgenes para eliminar bordes blancos o negros */
+        /* 4. Limpieza de márgenes estructurales molestos */
         [data-testid="stMainBlockContainer"] {{
             padding: 3rem 5rem !important;
             max-width: 100% !important;
         }}
         
-        /* 4. Barra lateral con efecto Glassmorphism (único bloque opaco para contraste) */
+        /* 5. Panel lateral con Glassmorphism oscuro para que contraste bonito */
         .stSidebar, [data-testid="stSidebar"] {{
             background-color: rgba(10, 15, 30, 0.93) !important;
             backdrop-filter: blur(15px) !important;
@@ -68,7 +63,7 @@ if os.path.exists(video_path):
         </style>
         
         <video autoplay loop muted playsinline id="background-video">
-            <source src="data:video/mp4;base64,{video_base64}" type="type/mp4">
+            <source src="data:video/mp4;base64,{video_base64}" type="video/mp4">
         </video>
     """, unsafe_allow_html=True)
 else:
@@ -110,7 +105,7 @@ st.markdown("""
 with st.sidebar:
     st.image("https://img.icons8.com/fluency/96/space-shield.png", width=70)
     st.markdown("<h3 style='margin:0; color:#FFFFFF;'>SICE-México AI</h3>", unsafe_allow_html=True)
-    st.caption("Engine v1.8 | Fuerza Bruta UI")
+    st.caption("Engine v1.9 | Full-Screen Fixed")
     st.write("---")
     st.markdown("**📂 Portafolio Nacional Conectado:**")
     st.caption("✔️ `ime_2020.csv` (CONAPO)\n\n✔️ `03_iim_mex_eeuu.csv` (Migración)\n\n✔️ `usuarios_internet.csv` (INEGI)\n\n✔️ `biblioteca_aguas.csv` (CONAGUA)")
@@ -129,16 +124,9 @@ with st.expander("📖 EXPLICACIÓN CIENTÍFICA: ¿Cómo funciona la Lógica del
         <div class="theory-title">La Ontología del Balance Sistémico</div>
         <p style="font-size:1.05rem; line-height:1.7;">
             A diferencia de los modelos tradicionales orientados exclusivamente hacia la acumulación unidimensional de poder, 
-            <strong>The Balance Core</strong> postula que la estabilidad real de un territorio depende de la <strong>alineación proporcional</strong> de sus cuatro dimensiones vitales:
+            <strong>The Balance Core</strong> postula que la estabilidad real de un territorio depende de la <strong>alineación proporcional</strong> de sus cuatro dimensiones vitales.
         </p>
-        <ul style="color:#E2E8F0; padding-left:1.2rem; margin-top:0.8rem;">
-            <li style="margin-bottom:0.5rem;"><strong>Structure (S):</strong> Capacidad institucional, orden normativo y resiliencia de control subnacional.</li>
-            <li style="margin-bottom:0.5rem;"><strong>Identity (I):</strong> Cohesión del tejido social, arraigo cultural y contención a la dispersión migratoria asimétrica.</li>
-            <li style="margin-bottom:0.5rem;"><strong>Connectivity (C):</strong> Infraestructura de redes, adopción digital abierta e interconexión global soberana.</li>
-            <li style="margin-bottom:0.5rem;"><strong>Planetary Ethics (E):</strong> Cumplimiento estricto de límites biofísicos y sustentabilidad hidrogeológica regional.</li>
-        </ul>
         <h4 style="color:#38BDF8; margin-top:1.5rem;">La Ecuación del Desequilibrio</h4>
-        <p>El modelo evalúa el riesgo territorial mediante el <strong>Coeficiente de Dispersión Dimensional ($D$)</strong> usando la desviación estándar:</p>
         <p style='text-align: center; font-size: 1.4rem; background: rgba(255,255,255,0.06); padding: 1rem; border-radius: 0.5rem; margin: 1.5rem 0; color:#FFFFFF;'>
             $$D = \\sigma(S, I, C, E) = \\sqrt{\\frac{1}{4}\\sum_{i=1}^{4}(x_i - \\mu)^2}$$
         </p>
@@ -194,28 +182,28 @@ if df is not None:
         
         if dim_fracturada_codigo == "E" or E < 10.0:
             foco_diagnostico = "DÉFICIT ÉTICO-ECOLÓGICO POR SATURACIÓN INDUSTRIAL"
-            analisis_teorico = f"El vector de {estado_selector} muestra una severa sobreexplotación biofísica. El indicador hidrogeológico real extraído de las bases de CONAGUA ({E:.1f}/25) delata que las presiones del nearshoring transnacional están rebasando la resiliencia de las cuencas locales."
-            recom_1 = "**Moratoria de Nearshoring Extractivo:** Suspender inmediatamente la entrega de licencias a corporaciones que demanden un consumo hídrico intensivo no acoplado a sistemas de ciclo cerrado."
-            recom_2 = "**Monitoreo Satelital Coetáneo:** Conectar la infraestructura de sensores de CONAGUA directamente al pipeline del SICE para auditar el abatimiento de acuíferos subterráneos en tiempo real."
-            recom_3 = "**Equilibrio Planetario Mandatorio:** Anteponer los límites de supervivencia física analizados en tu obra (*When the Ground Gives Way*) sobre los incentivos comerciales externos."
+            analisis_teorico = f"El vector de {estado_selector} muestra una severa sobreexplotación biofísica. El indicador hídrico de las bases de CONAGUA ({E:.1f}/25) delata que las presiones del nearshoring transnacional están rebasando la resiliencia local."
+            recom_1 = "**Moratoria de Nearshoring Extractivo:** Suspender inmediatamente la entrega de licencias a corporaciones que demanden un consumo hídrico intensivo."
+            recom_2 = "**Monitoreo Satelital Coetáneo:** Conectar la infraestructura de sensores de CONAGUA directamente al pipeline del SICE para auditar el abatimiento de acuíferos."
+            recom_3 = "**Equilibrio Planetario Mandatorio:** Anteponer los límites de supervivencia física analizados en tu obra (*When the Ground Gives Way*)."
         elif dim_fracturada_codigo == "I":
             foco_diagnostico = "DISRUPCIÓN IDENTITARIA POR ALTA INTENSIDAD MIGRATORIA"
-            analisis_teorico = f"Los microdatos extraídos del portafolio del CONAPO detectan una fragmentación del tejido social en {estado_selector} ({I:.1f}/25). La alta intensidad migratoria transnacional genera una fuga crítica de capital social."
-            recom_1 = "**Políticas de Arraigo Coetáneo:** Destinar incentivos económicos dirigidos a la tecnificación del campo y clústeres comunitarios en las regiones de expulsión demográfica."
-            recom_2 = "**Fideicomisos de Resiliencia Social:** Estructurar un esquema de coinversión institucional con asociaciones de migrantes para transformar flujos de remesas en infraestructura de soporte."
-            recom_3 = "**Estabilización del Entorno:** Fortalecer los mecanismos de cohesión comunitaria interna para blindar la identidad frente a choques económicos externos."
+            analisis_teorico = f"Los microdatos del CONAPO detectan una fragmentación del tejido social en {estado_selector} ({I:.1f}/25). La alta intensidad migratoria transnacional genera una fuga crítica de capital social."
+            recom_1 = "**Políticas de Arraigo Coetáneo:** Destinar incentivos económicos dirigidos a la tecnificación del campo en las regiones de expulsión demográfica."
+            recom_2 = "**Fideicomisos de Resiliencia Social:** Estructurar un esquema de coinversión institucional con asociaciones de migrantes para transformar remesas."
+            recom_3 = "**Estabilización del Entorno:** Fortalecer los mecanismos de cohesión comunitaria interna para blindar la identidad."
         elif dim_fracturada_codigo == "C":
             foco_diagnostico = "DOMINANCIA ASIMÉTRICA DE CONECTIVIDAD DIGITAL"
             analisis_teorico = f"La entidad registra una hiper-conectividad digital ({C:.1f}/25) según los datos de la ENDUTIH-INEGI que desborda por completo sus capacidades institucionales de control ({S:.1f}/25)."
-            recom_1 = "**Despliegue de Nodos de Red Soberana:** Mandatar que toda la metadata crítica gubernamental sea procesada en infraestructuras locales bajo legislación mexicana nacional."
-            recom_2 = "**Mitigación de Dependencias:** Sustituir dependencias tecnológicas críticas por plataformas de software abierto para mitigar el control algorítmico extranjero."
-            recom_3 = "**Gobernanza de Redes:** Vincular el despliegue de nueva infraestructura de conectividad a la maduración de las capacidades de auditoría del eje Structure."
+            recom_1 = "**Despliegue de Nodos de Red Soberana:** Mandatar que toda la metadata crítica gubernamental sea procesada en infraestructuras locales."
+            recom_2 = "**Mitigación de Dependencias:** Sustituir dependencias tecnológicas críticas por plataformas de software abierto."
+            recom_3 = "**Gobernanza de Redes:** Vincular el despliegue de nueva infraestructura de conectividad a la maduración del eje Structure."
         else:
             foco_diagnostico = "DEBILIDAD ESTRUCTURAL Y REZAGO DE CAPACIDAD"
             analisis_teorico = f"El algoritmo SICE reporta una parálisis en el eje de Structure ({S:.1f}/25), fuertemente condicionado por los altos índices de marginación e ineficiencia burocrática del territorio."
-            recom_1 = "**Automatización del Control Institucional:** Implementar la matriz determinista de balance SICE para erradicar procesos opacos y descentralizar las capacidades públicas."
-            recom_2 = "**Inversión Proporcional Compensatoria:** Reorientar el gasto público estatal exclusivamente hacia los ejes rezagados para colapsar la dispersión matemática D."
-            recom_3 = "**Blindaje Normativo:** Fortalecer el marco jurídico subnacional bajo principios de realismo periférico para repeler presiones de corporativos externos."
+            recom_1 = "**Automatización del Control Institucional:** Implementar la matriz determinista de balance SICE para erradicar procesos opacos."
+            recom_2 = "**Inversión Proporcional Compensatoria:** Reorientar el gasto público estatal exclusivamente hacia los ejes rezagados."
+            recom_3 = "**Blindaje Normativo:** Fortalecer el marco jurídico subnacional bajo principios de realismo periférico."
 
     # 10. VISUALIZACIÓN DE BARRAS DIMENSIONALES SOBRE EL VIDEO
     st.write("##")
@@ -243,7 +231,7 @@ if df is not None:
 
     st.write("---")
 
-    # 12. GENERADOR DE MEMORÁNDUM EJECUTIVO PREMIUM
+    # 12. GENERADOR DE MEMORÁNDUM EJECUTIVO
     st.write("### 🎛️ Centro de Inferencia Analítica Subnacional")
     st.caption("Presione el botón para interrogar la base de conocimiento y emitir el dictamen regulatorio.")
 
