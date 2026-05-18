@@ -44,48 +44,6 @@ st.markdown(f"""
         backdrop-filter: blur(20px) !important;
         border-right: 1px solid rgba(255, 255, 255, 0.06) !important;
     }}
-    </style>
-""", unsafe_allow_html=True)
-
-# 3. ESTILOS DE TIPOGRAFÍA Y ARQUITECTURA DE CONTRASTE PREMIUM
-st.markdown("""
-    <style>
-    @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
-    
-    .main-title { font-family: 'Fraunces', serif; font-size: 3.6rem; font-weight: 700; color: #FFFFFF; margin-bottom: 0.1rem; text-shadow: 0 4px 15px rgba(0,0,0,0.6); }
-    .subtitle { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.15rem; color: #A0AEC0; margin-bottom: 2.5rem; font-weight: 300; letter-spacing: 0.02em; }
-    
-    /* SOLUCIÓN AL ENTRABADO DEL EXPANDER: Forzar transparencia total en el contenedor nativo de Streamlit */
-    [data-testid="stExpander"], 
-    .streamlit-expanderHeader, 
-    .streamlit-expanderContent,
-    div[data-styled-id] > details {{
-        background-color: transparent !important;
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-    }}
-
-    /* Estilización del título del expander nativo para que sea legible y elegante */
-    .streamlit-expanderHeader p {{
-        font-family: 'Plus Jakarta Sans', sans-serif !important;
-        color: #38BDF8 !important;
-        font-weight: 600 !important;
-        font-size: 1.1rem !important;
-    }}
-    
-    /* Tarjeta de marco teórico blindada: Máxima opacidad y contraste aislado */
-    .theory-card { 
-        background: rgba(11, 17, 33, 0.98) !important; 
-        color: #F8FAFC !important; 
-        padding: 2.5rem; 
-        border-radius: 12px; 
-        margin-top: 0.5rem;
-        margin-bottom: 0.5rem; 
-        border: 1px solid rgba(56, 189, 248, 0.25); 
-        box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-    }
-    .theory-title { font-family: 'Fraunces', serif; font-size: 1.8rem; color: #38BDF8; font-style: italic; margin-bottom: 1.2rem; }
     
     /* Bloques de Alerta Científica Abierta (Open Science Banner) */
     .status-banner {
@@ -115,14 +73,13 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 4. PANEL LATERAL (Sidebar Curado de Alta Dirección)
+# 3. PANEL LATERAL (Sidebar Curado de Alta Dirección)
 with st.sidebar:
     st.image("https://img.icons8.com/fluency/96/space-shield.png", width=70)
     st.markdown("<h3 style='margin:0; color:#FFFFFF;'>SICE-México AI</h3>", unsafe_allow_html=True)
     st.caption("Core Engine v2.5 | Global Scale Involute")
     st.write("---")
     
-    # Declaración de Misión y Enfoque de Ciencia Abierta
     st.markdown("🪐 **Gobernanza y Ciencia Abierta:**")
     st.caption("""
     Este ecosistema computacional opera bajo principios estrictos de **Ciencia Abierta**, alojando su núcleo de procesamiento y matrices algorítmicas en un repositorio público de **GitHub**. 
@@ -136,45 +93,141 @@ with st.sidebar:
     st.markdown("**👤 Investigadora Principal:**\nLaura Pamela Aranda Medrano")
     st.caption("Modelos respaldados por la base epistemológica de *The Balance Core* (2026).")
 
-# 5. ENCABEZADO DE LA PLATAFORMA
+# 4. ENCABEZADO DE LA PLATAFORMA
 st.markdown('<div class="main-title">SICE-México AI</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Ecosistema Computacional de Gobernanza Predictiva e Inferencia Macroestructural Subnacional</div>', unsafe_allow_html=True)
 
-# BANNER DE ESTADO EXPERIMENTAL (Ubicación estratégica y elegante)
+# BANNER DE ESTADO EXPERIMENTAL
 st.markdown("""
 <div class="status-banner">
     ⚠️ <strong>Aviso de Fase de Calibración:</strong> Este motor analítico se encuentra actualmente en su <strong>fase experimental activa</strong>. Los módulos deterministas y las capas predictivas están siendo sometidos a procesos continuos de optimización y pulido algorítmico para asegurar la máxima precisión métrica en la inferencia subnacional.
 </div>
 """, unsafe_allow_html=True)
 
-# 6. EXPLICACIÓN DE LA LÓGICA DE BALANCE INTERACTIVA (CORREGIDA CON ELIMINACIÓN DE CAPAS NEGRAS NATIVAS)
-with st.expander("📖 La Ontología y Epistemología del Balance Core"):
-    st.markdown("""
-    <div class="theory-card">
+# 5. REVOLUCIÓN DE CONTRASTE: ACORDEÓN COMPLEMENTARIO NATIVO EN HTML+JS SOBERANO
+# Inyectamos MathJax para resolver la estética de la fórmula y blindamos la legibilidad contra el fondo
+html_explicacion_cientifica = """
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+    
+    body { background: transparent; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; color: #FFFFFF; }
+    
+    .custom-accordion {
+        background: rgba(11, 17, 33, 0.98);
+        border: 1px solid rgba(56, 189, 248, 0.35);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        margin-bottom: 20px;
+    }
+    
+    .accordion-toggle {
+        width: 100%;
+        background: rgba(15, 23, 42, 0.95);
+        color: #38BDF8;
+        padding: 18px 25px;
+        text-align: left;
+        border: none;
+        outline: none;
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 1.15rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: background 0.3s ease;
+        border-bottom: 1px solid rgba(56, 189, 248, 0.15);
+    }
+    
+    .accordion-toggle:hover { background: rgba(30, 41, 59, 0.9); }
+    
+    .accordion-content {
+        padding: 30px 35px;
+        display: block; /* Se mantiene desplegado elegantemente de origen */
+    }
+    
+    .theory-title { font-family: 'Fraunces', serif; font-size: 1.8rem; color: #38BDF8; font-style: italic; margin-top: 0; margin-bottom: 18px; }
+    p { font-size: 1.05rem; line-height: 1.75; color: #F8FAFC; margin-bottom: 15px; }
+    ul { color: #E2E8F0; padding-left: 20px; line-height: 1.8; font-size: 1.02rem; }
+    li { margin-bottom: 8px; }
+    strong { color: #FFFFFF; }
+    
+    /* Contenedor matemático de alta gama */
+    .formula-container {
+        text-align: center;
+        font-size: 1.45rem;
+        background: rgba(255, 255, 255, 0.04);
+        padding: 20px;
+        border-radius: 8px;
+        margin: 25px 0;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: #FFFFFF !important;
+        overflow-x: auto;
+    }
+</style>
+</head>
+<body>
+
+<div class="custom-accordion">
+    <button class="accordion-toggle" onclick="toggleAccordion()">
+        <span>📖 EXPLICACIÓN CIENTÍFICA: La Ontología y Epistemología del Balance Core</span>
+        <span id="arrow">▲</span>
+    </button>
+    <div class="accordion-content" id="panel">
         <div class="theory-title">La Ontología del Balance Sistémico y Multidimensional</div>
-        <p style="font-size:1.05rem; line-height:1.75; color: #F8FAFC !important;">
+        <p>
             A diferencia de las aproximaciones analíticas ortodoxas orientadas exclusivamente hacia la acumulación unidimensional de capital o control, 
             <strong>The Balance Core</strong> postula que la estabilidad estructural de un territorio depende críticamente de la 
             <strong>alineación proporcional y la tensión homeostática</strong> de sus cuatro vectores vitales:
         </p>
-        <ul style="color:#E2E8F0 !important; padding-left:1.5rem; margin-top:0.8rem; line-height: 1.8;">
+        <ul>
             <li><strong>Structure (S):</strong> Capacidad institucional, solidez jurídica, densidad de gobernanza y resiliencia de control burocrático subnacional.</li>
             <li><strong>Identity (I):</strong> Cohesión orgánica del tejido social, arraigo socio-cultural endógeno y contención a la dispersión migratoria asimétrica.</li>
             <li><strong>Connectivity (C):</strong> Densidad de infraestructura de redes, tasa de adopción digital abierta e interconexión soberana con flujos macroeconómicos globales.</li>
             <li><strong>Planetary Ethics (E):</strong> Cumplimiento estricto de los límites biofísicos del entorno, sustentabilidad ecosistémica y preservación hidrogeológica regional.</li>
         </ul>
-        <h4 style="color:#38BDF8; margin-top:1.8rem; font-family: 'Fraunces', serif; font-size: 1.3rem;">La Formalización del Desequilibrio</h4>
-        <p style="color: #E2E8F0 !important;">El modelo evalúa la vulnerabilidad territorial sistémica mediante el <strong>Coeficiente de Dispersión Dimensional ($D$)</strong>, calculando la desviación estándar sobre los datos crudos extraídos de repositorios oficiales:</p>
-        <p style='text-align: center; font-size: 1.4rem; background: rgba(255,255,255,0.04); padding: 1.2rem; border-radius: 0.5rem; margin: 1.5rem 0; color:#FFFFFF; border: 1px solid rgba(255,255,255,0.1);'>
-            $$D = \\sigma(S, I, C, E) = \\sqrt{\\frac{1}{4}\\sum_{i=1}^{4}(x_i - \\mu)^2}$$
-        </p>
-        <p style="font-size:0.92rem; color: #94A3B8 !important; font-style: italic; margin-top: 1rem;">
+        
+        <h4 style="color:#38BDF8; margin-top:30px; font-family: 'Fraunces', serif; font-size: 1.35rem; margin-bottom: 10px;">La Formalización del Desequilibrio</h4>
+        <p>El modelo evalúa la vulnerabilidad territorial sistémica mediante el <strong>Coeficiente de Dispersión Dimensional (\(D\))</strong>, calculando la desviación estándar sobre los datos crudos extraídos de repositorios oficiales:</p>
+        
+        <div class="formula-container">
+            \[D = \sigma(S, I, C, E) = \sqrt{\frac{1}{4}\sum_{i=1}^{4}(x_i - \mu)^2}\]
+        </div>
+        
+        <p style="font-size:0.92rem; color: #94A3B8; font-style: italic; margin-top: 15px;">
             *Nota: Este marco matemático rompe con el sesgo lineal, permitiendo diagnosticar qué vector está sufriendo un proceso de canibalización extractiva o rezago institucional.
         </p>
     </div>
-    """, unsafe_allow_html=True)
+</div>
 
-# 7. PIPELINE DE BASES DE DATOS NACIONAL
+<script>
+function toggleAccordion() {
+    var panel = document.getElementById("panel");
+    var arrow = document.getElementById("arrow");
+    if (panel.style.display === "none") {
+        panel.style.display = "block";
+        arrow.innerHTML = "▲";
+    } else {
+        panel.style.display = "none";
+        arrow.innerHTML = "▼";
+    }
+}
+</script>
+</body>
+</html>
+"""
+
+# Renderizamos la tarjeta en un iframe nativo, dándole altura suficiente para que luzca colosal
+st.components.v1.html(html_explicacion_cientifica, height=620, scrolling=False)
+
+# 6. PIPELINE DE BASES DE DATOS NACIONAL
 @st.cache_data
 def cargar_pipeline_nacional():
     if os.path.exists("datos_sice.csv"):
@@ -191,14 +244,14 @@ def cargar_pipeline_nacional():
 df = cargar_pipeline_nacional()
 
 if df is not None:
-    # 8. SELECCIÓN DE ESTADO INTERACTIVO
+    # 7. SELECCIÓN DE ESTADO INTERACTIVO
     st.write("### 📍 Interrogación del Vector Territorial")
     estado_selector = st.selectbox("Elija la entidad federativa a auditar sobre la red de datos:", df["estado"].sort_values().unique())
     
     data_vector = df[df["estado"] == estado_selector].iloc[0]
     S, I, C, E = float(data_vector["S"]), float(data_vector["I"]), float(data_vector["C"]), float(data_vector["E"])
 
-    # 9. RESOLUCIÓN MATEMÁTICA INTERNA DEL CORE
+    # 8. RESOLUCIÓN MATEMÁTICA INTERNA DEL CORE
     gbi_total = S + I + C + E
     valores_sistema = [S, I, C, E]
     dispersion_D = np.std(valores_sistema)
@@ -232,7 +285,7 @@ if df is not None:
             analisis_teorico = f"Los microdatos del CONAPO detectan una fragmentación del tejido social en {estado_selector} ({I:.1f}/25). La alta intensidad migratoria transnacional genera una fuga crítica de capital social."
             recom_1 = "**Políticas de Arraigo Coetáneo:** Destinar incentivos económicos dirigidos a la tecnificación del campo en las regiones de expulsión demográfica."
             recom_2 = "**Fideicomisos de Resiliencia Social:** Estructurar un esquema de coinversión institucional con asociaciones de migrantes para transformar remesas."
-            recom_3 = "**Estabilización del Entorno:** Fortalecer los mecanismos de cohesión comunitaria interna para blindar la identidad."
+            recom_3 = "**Estabilización del Entorno:** Fortalecer los mechanisms de cohesión comunitaria interna para blindar la identidad."
         elif dim_fracturada_codigo == "C":
             foco_diagnostico = "DOMINANCIA ASIMÉTRICA DE CONECTIVIDAD DIGITAL"
             analisis_teorico = f"La entidad registra una hiper-conectividad digital ({C:.1f}/25) según los datos de la ENDUTIH-INEGI que desborda por completo sus capacidades institucionales de control ({S:.1f}/25)."
@@ -246,7 +299,7 @@ if df is not None:
             recom_2 = "**Inversión Proporcional Compensatoria:** Reorientar el gasto público estatal exclusivamente hacia los ejes rezagados."
             recom_3 = "**Blindaje Normativo:** Fortalecer el marco jurídico subnacional bajo principios de realismo periférico."
 
-    # 10. VISUALIZACIÓN DE BARRAS DIMENSIONALES SOBRE EL FONDO CÓSMICO
+    # 9. VISUALIZACIÓN DE BARRAS DIMENSIONALES SOBRE EL FONDO CÓSMICO
     st.write("##")
     col_p1, col_p2 = st.columns(2)
     with col_p1:
@@ -260,7 +313,7 @@ if df is not None:
         st.markdown(f"🌱 **Planetary Ethics (E): {E:.1f} / 25**")
         st.progress(E / 25)
 
-    # 11. BLOQUES MÉTRICOS ESTILIZADOS
+    # 10. BLOQUES MÉTRICOS ESTILIZADOS
     st.write("##")
     cm1, cm2, cm3 = st.columns(3)
     with cm1:
@@ -272,7 +325,7 @@ if df is not None:
 
     st.write("---")
 
-    # 12. GENERADOR DE MEMORÁNDUM EJECUTIVO
+    # 11. GENERADOR DE MEMORÁNDUM EJECUTIVO
     st.write("### 🎛️ Centro de Inferencia Analítica Subnacional")
     st.caption("Presione el botón para interrogar la base de conocimiento y emitir el dictamen regulatorio.")
 
