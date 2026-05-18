@@ -12,66 +12,74 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# 2. INYECCIÓN DEL FONDO CÓSMICO FIJO DE ULTRA-ALTA DEFINICIÓN
+# 2. INYECCIÓN DEL FONDO CÓSMICO Y ESTILOS GLOBALES UNIFICADOS (Máxima Seguridad de Sintaxis)
 url_fondo_estrellas = "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?q=80&w=2560&auto=format&fit=crop"
 
-st.markdown(f"""
-    <style>
-    /* Inyección directa en la raíz absoluta de la aplicación */
-    .stApp, [data-testid="stAppViewMain"] {{
-        background-image: linear-gradient(rgba(8, 10, 24, 0.88), rgba(13, 18, 36, 0.88)), url("{url_fondo_estrellas}");
-        background-size: cover !important;
-        background-position: center !important;
-        background-attachment: fixed !important;
-        background-repeat: no-repeat !important;
-    }}
-    
-    /* Forzar transparencia en los bloques de contenido intermedio */
-    .stMain, .stHeader, [data-testid="stHeader"], [data-testid="stMain"], [data-testid="stVerticalBlock"] {{
-        background-color: transparent !important;
-        background: transparent !important;
-    }}
-    
-    /* Configuración refinada del margen contenedor */
-    [data-testid="stMainBlockContainer"] {{
-        padding: 3rem 5rem !important;
-        max-width: 100% !important;
-    }}
-    
-    /* Panel lateral elegante (Glassmorphism oscuro) */
-    .stSidebar, [data-testid="stSidebar"] {{
-        background-color: rgba(8, 12, 28, 0.96) !important;
-        backdrop-filter: blur(20px) !important;
-        border-right: 1px solid rgba(255, 255, 255, 0.06) !important;
-    }}
-    
-    /* Bloques de Alerta Científica Abierta (Open Science Banner) */
-    .status-banner {
-        background: rgba(30, 41, 59, 0.7);
-        border-left: 4px solid #F59E0B;
-        padding: 1.2rem;
-        border-radius: 0.5rem;
-        margin-bottom: 2rem;
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        font-size: 0.92rem;
-        line-height: 1.6;
-    }
-    
-    /* Cajas métricas flotantes */
-    .metric-box { background-color: rgba(13, 20, 38, 0.85); padding: 1.4rem; border-radius: 0.75rem; border: 1px solid rgba(255,255,255,0.08); text-align: center; backdrop-filter: blur(8px); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
-    .metric-label { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: #94A3B8; font-weight: 600; }
-    .metric-val { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.1rem; font-weight: 800; margin-top: 0.2rem; }
-    
-    /* El contenedor ejecutivo premium para el Dictamen */
-    .memo-container { background: rgba(9, 13, 26, 0.96); border: 1px solid rgba(255, 255, 255, 0.12); padding: 2.5rem; border-radius: 12px; box-shadow: 0 30px 60px -15px rgba(0,0,0,0.8); backdrop-filter: blur(25px); margin-top: 2rem; font-family: 'Plus Jakarta Sans', sans-serif; color: #F8FAFC; }
-    .memo-header { font-family: 'Fraunces', serif; font-size: 2.2rem; font-weight: 400; color: #FFFFFF; margin-bottom: 0.2rem; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 0.6rem; }
-    .memo-meta { font-size: 0.88rem; color: #94A3B8; font-family: monospace; margin-bottom: 1.8rem; }
-    .memo-section-title { font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94A3B8; margin-top: 2rem; margin-bottom: 0.8rem; border-bottom: 1px dashed rgba(255,255,255,0.15); padding-bottom: 0.3rem; }
-    
-    /* Forzar estilos de textos globales */
-    .stMarkdown, p, span, label, h3 { font-family: 'Plus Jakarta Sans', sans-serif !important; color: #FFFFFF !important; }
-    </style>
-""", unsafe_allow_html=True)
+css_completo = """
+<style>
+/* Inyección directa en la raíz absoluta de la aplicación */
+.stApp, [data-testid="stAppViewMain"] {
+    background-image: linear-gradient(rgba(8, 10, 24, 0.88), rgba(13, 18, 36, 0.88)), url("URL_FONDO_REPLACE");
+    background-size: cover !important;
+    background-position: center !important;
+    background-attachment: fixed !important;
+    background-repeat: no-repeat !important;
+}
+
+/* Forzar transparencia en los bloques de contenido intermedio */
+.stMain, .stHeader, [data-testid="stHeader"], [data-testid="stMain"], [data-testid="stVerticalBlock"] {
+    background-color: transparent !important;
+    background: transparent !important;
+}
+
+/* Configuración refinada del margen contenedor */
+[data-testid="stMainBlockContainer"] {
+    padding: 3rem 5rem !important;
+    max-width: 100% !important;
+}
+
+/* Panel lateral elegante (Glassmorphism oscuro) */
+.stSidebar, [data-testid="stSidebar"] {
+    background-color: rgba(8, 12, 28, 0.96) !important;
+    backdrop-filter: blur(20px) !important;
+    border-right: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+.main-title { font-family: 'Fraunces', serif; font-size: 3.6rem; font-weight: 700; color: #FFFFFF; margin-bottom: 0.1rem; text-shadow: 0 4px 15px rgba(0,0,0,0.6); }
+.subtitle { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.15rem; color: #A0AEC0; margin-bottom: 2.5rem; font-weight: 300; letter-spacing: 0.02em; }
+
+/* Bloques de Alerta Científica Abierta (Open Science Banner) */
+.status-banner {
+    background: rgba(30, 41, 59, 0.7);
+    border-left: 4px solid #F59E0B;
+    padding: 1.2rem;
+    border-radius: 0.5rem;
+    margin-bottom: 2rem;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.92rem;
+    line-height: 1.6;
+}
+
+/* Cajas métricas flotantes */
+.metric-box { background-color: rgba(13, 20, 38, 0.85); padding: 1.4rem; border-radius: 0.75rem; border: 1px solid rgba(255,255,255,0.08); text-align: center; backdrop-filter: blur(8px); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+.metric-label { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: #94A3B8; font-weight: 600; }
+.metric-val { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.1rem; font-weight: 800; margin-top: 0.2rem; }
+
+/* El contenedor ejecutivo premium para el Dictamen */
+.memo-container { background: rgba(9, 13, 26, 0.96); border: 1px solid rgba(255, 255, 255, 0.12); padding: 2.5rem; border-radius: 12px; box-shadow: 0 30px 60px -15px rgba(0,0,0,0.8); backdrop-filter: blur(25px); margin-top: 2rem; font-family: 'Plus Jakarta Sans', sans-serif; color: #F8FAFC; }
+.memo-header { font-family: 'Fraunces', serif; font-size: 2.2rem; font-weight: 400; color: #FFFFFF; margin-bottom: 0.2rem; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 0.6rem; }
+.memo-meta { font-size: 0.88rem; color: #94A3B8; font-family: monospace; margin-bottom: 1.8rem; }
+.memo-section-title { font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94A3B8; margin-top: 2rem; margin-bottom: 0.8rem; border-bottom: 1px dashed rgba(255,255,255,0.15); padding-bottom: 0.3rem; }
+
+/* Forzar estilos de textos globales */
+.stMarkdown, p, span, label, h3 { font-family: 'Plus Jakarta Sans', sans-serif !important; color: #FFFFFF !important; }
+</style>
+""".replace("URL_FONDO_REPLACE", url_fondo_estrellas)
+
+st.markdown(css_completo, unsafe_allow_html=True)
+
 
 # 3. PANEL LATERAL (Sidebar Curado de Alta Dirección)
 with st.sidebar:
@@ -88,14 +96,16 @@ with st.sidebar:
     """)
     st.write("---")
     st.markdown("**📂 Repositorios de Datos Indexados:**")
-    st.caption("✔️ `ime_2020.csv` (CONAPO)\n\n✔️ `03_iim_mex_eeuu.csv` (Migración)\n\n✔️ `usuarios_internet.csv` (INEGI)\n\n✔️ `biblioteca_aguas.csv` (CONAGUA)")
+    st.caption("✔️ `ime_2020.csv` (CONAPO)\n\n✔️ `03_iim_mex_eeuu_2020_entidad.csv` (Migración)\n\n✔️ `13_personas_usuarios_internet.csv` (INEGI)\n\n✔️ `biblioteca_aguas_subterraneas.csv` (CONAGUA)")
     st.write("---")
     st.markdown("**👤 Investigadora Principal:**\nLaura Pamela Aranda Medrano")
     st.caption("Modelos respaldados por la base epistemológica de *The Balance Core* (2026).")
 
+
 # 4. ENCABEZADO DE LA PLATAFORMA
 st.markdown('<div class="main-title">SICE-México AI</div>', unsafe_allow_html=True)
 st.markdown('<div class="subtitle">Ecosistema Computacional de Gobernanza Predictiva e Inferencia Macroestructural Subnacional</div>', unsafe_allow_html=True)
+
 
 # BANNER DE ESTADO EXPERIMENTAL
 st.markdown("""
@@ -104,8 +114,8 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# 5. REVOLUCIÓN DE CONTRASTE: ACORDEÓN COMPLEMENTARIO NATIVO EN HTML+JS SOBERANO
-# Inyectamos MathJax para resolver la estética de la fórmula y blindamos la legibilidad contra el fondo
+
+# 5. TARJETA EXCLUSIVA EN HTML+JS: MÁXIMO CONTRASTE Y MATEMÁTICAS EN ALTA DEFINICIÓN
 html_explicacion_cientifica = """
 <!DOCTYPE html>
 <html>
@@ -150,7 +160,7 @@ html_explicacion_cientifica = """
     
     .accordion-content {
         padding: 30px 35px;
-        display: block; /* Se mantiene desplegado elegantemente de origen */
+        display: block;
     }
     
     .theory-title { font-family: 'Fraunces', serif; font-size: 1.8rem; color: #38BDF8; font-style: italic; margin-top: 0; margin-bottom: 18px; }
@@ -159,17 +169,18 @@ html_explicacion_cientifica = """
     li { margin-bottom: 8px; }
     strong { color: #FFFFFF; }
     
-    /* Contenedor matemático de alta gama */
+    /* Contenedor matemático premium en una sola línea */
     .formula-container {
         text-align: center;
         font-size: 1.45rem;
         background: rgba(255, 255, 255, 0.04);
-        padding: 20px;
+        padding: 22px;
         border-radius: 8px;
         margin: 25px 0;
         border: 1px solid rgba(255, 255, 255, 0.1);
         color: #FFFFFF !important;
         overflow-x: auto;
+        white-space: nowrap;
     }
 </style>
 </head>
@@ -224,8 +235,9 @@ function toggleAccordion() {
 </html>
 """
 
-# Renderizamos la tarjeta en un iframe nativo, dándole altura suficiente para que luzca colosal
+# Renderizado aislado dentro del layout con la altura ideal para evitar cortes hórridos
 st.components.v1.html(html_explicacion_cientifica, height=620, scrolling=False)
+
 
 # 6. PIPELINE DE BASES DE DATOS NACIONAL
 @st.cache_data
@@ -285,7 +297,7 @@ if df is not None:
             analisis_teorico = f"Los microdatos del CONAPO detectan una fragmentación del tejido social en {estado_selector} ({I:.1f}/25). La alta intensidad migratoria transnacional genera una fuga crítica de capital social."
             recom_1 = "**Políticas de Arraigo Coetáneo:** Destinar incentivos económicos dirigidos a la tecnificación del campo en las regiones de expulsión demográfica."
             recom_2 = "**Fideicomisos de Resiliencia Social:** Estructurar un esquema de coinversión institucional con asociaciones de migrantes para transformar remesas."
-            recom_3 = "**Estabilización del Entorno:** Fortalecer los mechanisms de cohesión comunitaria interna para blindar la identidad."
+            recom_3 = "**Estabilización del Entorno:** Fortalecer los mecanismos de cohesión comunitaria interna para blindar la identidad."
         elif dim_fracturada_codigo == "C":
             foco_diagnostico = "DOMINANCIA ASIMÉTRICA DE CONECTIVIDAD DIGITAL"
             analisis_teorico = f"La entidad registra una hiper-conectividad digital ({C:.1f}/25) según los datos de la ENDUTIH-INEGI que desborda por completo sus capacidades institucionales de control ({S:.1f}/25)."
