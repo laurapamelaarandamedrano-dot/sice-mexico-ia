@@ -132,7 +132,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # 6. EXPLICACIÓN DE LA LÓGICA DE BALANCE INTERACTIVA (CORREGIDA E INYECTADA CON MÁXIMO CONTRASTE)
-with st.expander("📖 EXPLICACIÓN CIENTÍFICA: La Ontología y Epistemología del Balance Core"):
+ st.expander("📖 EXPLICACIÓN CIENTÍFICA: La Ontología y Epistemología del Balance Core"):
     st.markdown("""
     <div class="theory-card">
         <div class="theory-title">La Ontología del Balance Sistémico y Multidimensional</div>
