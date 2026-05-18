@@ -12,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# 2. INYECCIÓN DE VIDEO EN EL FONDO (CSS & HTML AVANZADO)
+# 2. INYECCIÓN DE VIDEO TOTALMENTE EXPANDIDO (FULL SCREEN & GLASSMORPHISM)
 video_path = "assets/globo_futurista.mp4"
 
 if os.path.exists(video_path):
@@ -23,25 +23,37 @@ if os.path.exists(video_path):
     
     st.markdown(f"""
         <style>
+        /* Fuerza al video a abarcar absolutamente toda la pantalla sin importar el scroll */
         #background-video {{
             position: fixed;
-            right: 0;
-            bottom: 0;
-            min-width: 100%;
-            min-height: 100%;
-            width: auto;
-            height: auto;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover; /* Estira el video para llenar toda la pantalla sin deformarse */
             z-index: -100;
-            background-size: cover;
-            opacity: 0.22;
-            filter: blur(0.5px);
+            opacity: 0.35; /* Intensidad ideal del globo de fondo */
         }}
-        .stApp {{
-            background-color: transparent;
+        
+        /* ¡ELIMINA LOS MÁRGENES Y PADDINGS DE STREAMLIT! */
+        .stApp, .stMain, [data-testid="stVerticalBlock"], [data-testid="stHeader"], [data-testid="stCanvasBlock"] {{
+            background-color: transparent !important;
+            padding-top: 0rem !important;
+            padding-bottom: 0rem !important;
+            margin: 0 !important;
         }}
+        
+        /* Remueve espacios internos del contenedor principal */
+        [data-testid="stMainBlockContainer"] {{
+            padding: 3rem 5rem !important; /* Espaciado elegante para que respiren las tarjetas */
+            max-width: 100% !important;
+        }}
+        
+        /* Panel lateral ultra estético con desenfoque de cristal (Glassmorphism) */
         .stSidebar {{
-            background-color: rgba(15, 23, 42, 0.88) !important;
-            backdrop-filter: blur(12px);
+            background-color: rgba(10, 15, 30, 0.90) !important;
+            backdrop-filter: blur(15px);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
         }}
         </style>
         <video autoplay loop muted playsinline id="background-video">
@@ -55,31 +67,39 @@ else:
         </style>
     """, unsafe_allow_html=True)
 
-# 3. ESTILOS DE TIPOGRAFÍA Y DISEÑO DE TARJETAS PROFESIONALES
+# 3. ESTILOS DE TIPOGRAFÍA Y INTERFAZ DE ALTA DIRECCIÓN
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,700;1,9..144,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
     
-    .main-title { font-family: 'Fraunces', serif; font-size: 3.5rem; font-weight: 700; color: #FFFFFF; margin-bottom: 0.1rem; text-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+    .main-title { font-family: 'Fraunces', serif; font-size: 3.6rem; font-weight: 700; color: #FFFFFF; margin-bottom: 0.1rem; text-shadow: 0 4px 15px rgba(0,0,0,0.6); }
     .subtitle { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.15rem; color: #94A3B8; margin-bottom: 2.5rem; font-weight: 300; }
     
-    .theory-card { background: rgba(15, 23, 42, 0.8); color: #F8FAFC; padding: 2.2rem; border-radius: 1rem; margin-bottom: 2.5rem; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(8px); }
+    /* Tarjeta de marco teórico */
+    .theory-card { background: rgba(15, 23, 42, 0.85); color: #F8FAFC; padding: 2.2rem; border-radius: 1rem; margin-bottom: 2.5rem; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(8px); }
     .theory-title { font-family: 'Fraunces', serif; font-size: 1.7rem; color: #38BDF8; font-style: italic; margin-bottom: 1rem; }
     
-    .metric-box { background-color: rgba(255, 255, 255, 0.05); padding: 1.4rem; border-radius: 0.75rem; border: 1px solid rgba(255,255,255,0.08); text-align: center; backdrop-filter: blur(4px); }
+    /* Cajas métricas flotantes */
+    .metric-box { background-color: rgba(15, 23, 42, 0.75); padding: 1.4rem; border-radius: 0.75rem; border: 1px solid rgba(255,255,255,0.1); text-align: center; backdrop-filter: blur(6px); box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
     .metric-label { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: #94A3B8; font-weight: 600; }
     .metric-val { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.1rem; font-weight: 800; margin-top: 0.2rem; }
     
-    /* Estilos globales para mantener el texto limpio */
-    .stMarkdown, p, span, label { font-family: 'Plus Jakarta Sans', sans-serif !important; color: #FFFFFF !important; }
+    /* El contenedor ejecutivo premium para el Dictamen */
+    .memo-container { background: rgba(10, 15, 30, 0.94); border: 1px solid rgba(255, 255, 255, 0.15); padding: 2.5rem; border-radius: 12px; box-shadow: 0 30px 60px -15px rgba(0,0,0,0.7); backdrop-filter: blur(20px); margin-top: 2rem; font-family: 'Plus Jakarta Sans', sans-serif; color: #F8FAFC; }
+    .memo-header { font-family: 'Fraunces', serif; font-size: 2.2rem; font-weight: 400; color: #FFFFFF; margin-bottom: 0.2rem; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 0.6rem; }
+    .memo-meta { font-size: 0.88rem; color: #94A3B8; font-family: monospace; margin-bottom: 1.8rem; }
+    .memo-section-title { font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94A3B8; margin-top: 2rem; margin-bottom: 0.8rem; border-bottom: 1px dashed rgba(255,255,255,0.15); padding-bottom: 0.3rem; }
+    
+    /* Forzar estilos de textos globales */
+    .stMarkdown, p, span, label, h3 { font-family: 'Plus Jakarta Sans', sans-serif !important; color: #FFFFFF !important; }
     </style>
 """, unsafe_allow_html=True)
 
-# 4. PANEL LATERAL (Sidebar Institucional)
+# 4. PANEL LATERAL (Sidebar Curado)
 with st.sidebar:
     st.image("https://img.icons8.com/fluency/96/space-shield.png", width=70)
     st.markdown("<h3 style='margin:0; color:#FFFFFF;'>SICE-México AI</h3>", unsafe_allow_html=True)
-    st.caption("Engine v1.6 | Inmersión de Red Global")
+    st.caption("Engine v1.7 | Inmersión Pantalla Completa")
     st.write("---")
     st.markdown("**📂 Portafolio Nacional Conectado:**")
     st.caption("✔️ `ime_2020.csv` (CONAPO)\n\n✔️ `03_iim_mex_eeuu.csv` (Migración)\n\n✔️ `usuarios_internet.csv` (INEGI)\n\n✔️ `biblioteca_aguas.csv` (CONAGUA)")
@@ -101,7 +121,7 @@ with st.expander("📖 EXPLICACIÓN CIENTÍFICA: ¿Cómo funciona la Lógica del
             <strong>The Balance Core</strong> postula que la estabilidad real de un territorio depende de la <strong>alineación proporcional</strong> de sus cuatro dimensiones vitales:
         </p>
         <ul style="color:#E2E8F0; padding-left:1.2rem; margin-top:0.8rem;">
-            <li style="margin-bottom:0.5rem;"><strong>Structure (S):</strong> Capacidad institucional, orden normativo y resiliencia regulatoria subnacional.</li>
+            <li style="margin-bottom:0.5rem;"><strong>Structure (S):</strong> Capacidad institucional, orden normativo y resiliencia de control subnacional.</li>
             <li style="margin-bottom:0.5rem;"><strong>Identity (I):</strong> Cohesión del tejido social, arraigo cultural y contención a la dispersión migratoria asimétrica.</li>
             <li style="margin-bottom:0.5rem;"><strong>Connectivity (C):</strong> Infraestructura de redes, adopción digital abierta e interconexión global soberana.</li>
             <li style="margin-bottom:0.5rem;"><strong>Planetary Ethics (E):</strong> Cumplimiento estricto de límites biofísicos y sustentabilidad hidrogeológica regional.</li>
@@ -110,9 +130,6 @@ with st.expander("📖 EXPLICACIÓN CIENTÍFICA: ¿Cómo funciona la Lógica del
         <p>El modelo evalúa el riesgo territorial mediante el <strong>Coeficiente de Dispersión Dimensional ($D$)</strong> usando la desviación estándar sobre variables de fuentes oficiales:</p>
         <p style='text-align: center; font-size: 1.4rem; background: rgba(255,255,255,0.06); padding: 1rem; border-radius: 0.5rem; margin: 1.5rem 0; color:#FFFFFF;'>
             $$D = \\sigma(S, I, C, E) = \\sqrt{\\frac{1}{4}\\sum_{i=1}^{4}(x_i - \\mu)^2}$$
-        </p>
-        <p style="color:#94A3B8; font-size:0.95rem; font-style:italic;">
-            Si una dimensión ejerce dominancia asimétrica o colapsa en déficit, el coeficiente D aumenta de forma crítica, detonando una alerta automatizada antes de consolidar una ruptura sistémica irreversible (When the Ground Gives Way).
         </p>
     </div>
     """, unsafe_allow_html=True)
@@ -156,7 +173,7 @@ if df is not None:
     if dispersion_D <= 4.0:
         clasificacion_sistema = "EQUILIBRIO COHERENTE (Adaptive Coherence)"
         color_hex = "#10B981"  # Verde Esmeralda
-        foco_diagnostico = "🟢 ADAPTIVE COHERENCE SISTÉMICA"
+        foco_diagnostico = "DÉFICIT BAJO / COHERENCE ADAPTATIVA REGIONAL"
         analisis_teorico = f"El territorio de {estado_selector} opera dentro de un marco de balance estructural proporcional. Su índice de dispersión analítica de D = {dispersion_D:.2f} denota que ninguna dimensión está canibalizando los recursos de otra, manteniendo una distribución armónica en el ecosistema regional."
         recom_1 = "**Preservación Dinámica del Modelo:** Institucionalizar el vector actual como línea base regulatoria para la planificación territorial estratégica."
         recom_2 = "**Monitoreo de Fluctuación Coetánea:** Implementar auditorías de varianza semestrales para detectar desviaciones en fases tempranas antes de cruzar el umbral de fricción."
@@ -166,29 +183,29 @@ if df is not None:
         color_hex = "#EF4444"  # Rojo Escarlata Real
         
         if dim_fracturada_codigo == "E" or E < 10.0:
-            foco_diagnostico = "🔴 DÉFICIT ÉTICO-ECOLÓGICO POR SATURACIÓN INDUSTRIAL"
+            foco_diagnostico = "DÉFICIT ÉTICO-ECOLÓGICO POR SATURACIÓN INDUSTRIAL"
             analisis_teorico = f"El vector de {estado_selector} muestra una severa sobreexplotación biofísica. El indicador hidrogeológico real extraído de las bases de CONAGUA ({E:.1f}/25) delata que las presiones del nearshoring transnacional están rebasando la resiliencia de las cuencas locales."
             recom_1 = "**Moratoria de Nearshoring Extractivo:** Suspender inmediatamente la entrega de licencias a corporaciones que demanden un consumo hídrico intensivo no acoplado a sistemas de ciclo cerrado."
             recom_2 = "**Monitoreo Satelital Coetáneo:** Conectar la infraestructura de sensores de CONAGUA directamente al pipeline del SICE para auditar el abatimiento de acuíferos subterráneos en tiempo real."
             recom_3 = "**Equilibrio Planetario Mandatorio:** Anteponer los límites de supervivencia física analizados en tu obra (*When the Ground Gives Way*) sobre los incentivos comerciales externos de corto plazo."
         elif dim_fracturada_codigo == "I":
-            foco_diagnostico = "🔴 DISRUPCIÓN IDENTITARIA POR ALTA INTENSIDAD MIGRATORIA"
-            analisis_teorico = f"Los microdatos extraídos del portafolio del CONAPO y migración detectan una fragmentación del tejido social en {estado_selector} ({I:.1f}/25). La alta intensidad migratoria transnacional genera una fuga crítica de capital social y desarraigo comunitario."
+            foco_diagnostico = "DISRUPCIÓN IDENTITARIA POR ALTA INTENSIDAD MIGRATORIA"
+            analisis_teorico = f"Los microdatos extraídos del portafolio del CONAPO detectan una fragmentación del tejido social en {estado_selector} ({I:.1f}/25). La alta intensidad migratoria transnacional genera una fuga crítica de capital social y desarraigo comunitario."
             recom_1 = "**Políticas de Arraigo Coetáneo:** Destinar incentivos económicos y tecnológicos dirigidos a la tecnificación del campo y clústeres comunitarios en las regiones de mayor expulsión demográfica."
             recom_2 = "**Fideicomisos de Resiliencia Social:** Estructurar un esquema de coinversión institucional con asociaciones de migrantes para transformar flujos de remesas pasivas en infraestructura de soporte (Structure)."
             recom_3 = "**Estabilización del Entorno:** Fortalecer los mecanismos de cohesión comunitaria interna para blindar la identidad frente a choques económicos externos asimétricos."
         elif dim_fracturada_codigo == "C":
-            foco_diagnostico = "🔴 DOMINANCIA ASIMÉTRICA DE CONECTIVIDAD DIGITAL"
+            foco_diagnostico = "DOMINANCIA ASIMÉTRICA DE CONECTIVIDAD DIGITAL"
             analisis_teorico = f"La entidad registra una hiper-conectividad digital ({C:.1f}/25) según los datos de la ENDUTIH-INEGI que desborda por completo sus capacidades institucionales de control ({S:.1f}/25). Existe un riesgo inminente de captura soberana de datos por agentes transnacionales."
             recom_1 = "**Despliegue de Nodos de Red Soberana:** Mandatar que toda la metadata crítica gubernamental y económica sea procesada en infraestructuras locales bajo legislación mexicana nacional."
-            recom_2 = "Sustituir dependencias tecnológicas críticas por plataformas de software abierto para mitigar el control algorítmico ejercido por corporaciones extranjeras."
-            recom_3 = "Vincular el despliegue de nueva infraestructura de conectividad a la maduración de las capacidades de auditoría del eje Structure."
+            recom_2 = "**Mitigación de Dependencias:** Sustituir dependencias tecnológicas críticas por plataformas de software abierto para mitigar el control algorítmico ejercido por corporaciones extranjeras."
+            recom_3 = "**Gobernanza de Redes:** Vincular el despliegue de nueva infraestructura de conectividad a la maduración de las capacidades de auditoría del eje Structure."
         else:
-            foco_diagnostico = "🔴 DEBILIDAD ESTRUCTURAL Y REZAGO DE CAPACIDAD"
+            foco_diagnostico = "DEBILIDAD ESTRUCTURAL Y REZAGO DE CAPACIDAD"
             analisis_teorico = f"El algoritmo SICE reporta una parálisis en el eje de Structure ({S:.1f}/25), fuertemente condicionado por los altos índices de marginación e ineficiencia burocrática del territorio mapeados en tus bases."
             recom_1 = "**Automatización del Control Institucional:** Implementar la matriz determinista de balance SICE para erradicar procesos opacos y descentralizar las capacidades de respuesta pública local."
             recom_2 = "**Inversión Proporcional Compensatoria:** Reorientar el gasto público estatal exclusivamente hacia los ejes rezagados para colapsar la dispersión matemática D a un rango seguro."
-            recom_3 = "Fortalecer el marco jurídico subnacional bajo principios de realismo periférico para repeler presiones de corporativos externos."
+            recom_3 = "**Blindaje Normativo:** Fortalecer el marco jurídico subnacional bajo principios de realismo periférico para repeler presiones de corporativos externos."
 
     # 10. VISUALIZACIÓN DE BARRAS DIMENSIONALES SOBRE EL VIDEO
     st.write("##")
@@ -216,7 +233,7 @@ if df is not None:
 
     st.write("---")
 
-    # 12. MOTOR REFORZADO DE DICTAMEN DE CONSULTORÍA CIENTÍFICA (Tarjeta Limpia y Profesional)
+    # 12. GENERADOR DE MEMORÁNDUM EJECUTIVO PREMIUM
     st.write("### 🎛️ Centro de Inferencia Analítica Subnacional")
     st.caption("Presione el botón para interrogar la base de conocimiento y emitir el dictamen regulatorio con el Core algorítmico.")
 
@@ -224,29 +241,35 @@ if df is not None:
         with st.spinner("Procesando vectores moleculares territoriales..."):
             time.sleep(0.5)
             
-            # DISEÑO 100% NATIVO DE TARJETA: Texto normal, limpio y profesional sin etiquetas crudas
-            with st.container():
-                st.markdown(f"""
-                <div style="background-color: rgba(15, 23, 42, 0.9); border: 1px solid rgba(255,255,255,0.15); border-left: 6px solid {color_hex}; padding: 2.5rem; border-radius: 1rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); backdrop-filter: blur(12px);">
-                    <div style="font-family: 'Fraunces', serif; font-size: 2.1rem; font-weight: 400; color: #FFFFFF; margin-bottom: 0.3rem;">Dictamen de Gobernanza Predictiva SICE-AI</div>
-                    <div style="font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem; color: #94A3B8; margin-bottom: 1.5rem;">REF ID: SICE-{estado_selector[:3].upper()}-2026-RESOLVED</div>
-                </div>
-                """, unsafe_allow_html=True)
+            # DISEÑO DE MEMORÁNDUM EN MODO CRISTAL COMPLETO
+            dictamen_html = f"""
+            <div class="memo-container">
+                <div class="memo-header">Dictamen de Gobernanza Predictiva SICE-AI</div>
+                <div class="memo-meta">REF ID: SICE-{estado_selector[:3].upper()}-2026-RESOLVED &nbsp;|&nbsp; EMISIÓN AUTOMATIZADA CORREGIDA</div>
                 
-                # Campos de contenido usando el Markdown nativo de Streamlit (limpio de etiquetas estorbosas)
-                st.write(f"### **Eje de Ruptura Multidimensional Encontrado:**")
-                st.write(f"### :{color_hex[1:]}[{foco_diagnostico}]")
+                <div class="memo-section-title">Eje de Ruptura Multidimensional Encontrado</div>
+                <p style="font-size: 1.35rem; font-weight: 800; color: {color_hex} !important; margin: 0.5rem 0 1.5rem 0;">
+                    {foco_diagnostico}
+                </p>
                 
-                st.info(f"👉 **Evaluación Macrodinámica:** {analisis_teorico}")
+                <div class="memo-section-title">Evaluación Macrodinámica del Vector</div>
+                <p style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: #E2E8F0 !important; background: rgba(255,255,255,0.04); padding: 1.2rem; border-radius: 6px; border-left: 4px solid {color_hex}; margin-bottom: 1.5rem;">
+                    "{analisis_teorico}"
+                </p>
                 
-                st.write("### 🎯 **Directrices Regulatorias de Diseño Institucional**")
-                st.markdown(f"* {recom_1}")
-                st.markdown(f"* {recom_2}")
-                st.markdown(f"* {recom_3}")
+                <div class="memo-section-title">Directrices Regulatorias de Diseño Institucional</div>
+                <ul style="padding-left: 1.5rem; margin-top: 0.5rem; color: #F8FAFC !important;">
+                    <li style="margin-bottom: 0.8rem; line-height: 1.6;">{recom_1}</li>
+                    <li style="margin-bottom: 0.8rem; line-height: 1.6;">{recom_2}</li>
+                    <li style="margin-bottom: 0.8rem; line-height: 1.6;">{recom_3}</li>
+                </ul>
                 
-                st.write("---")
-                st.caption(f"ℹ️ *Framework determinista de datos abiertos. Respaldado por el portafolio empírico de microdatos en Harvard Dataverse e indexado en SSRN (Elsevier) por la autora Laura Pamela Aranda Medrano, 2026. Todos los conceptos se desprenden de la tesis central de 'The Balance Core'.*")
-                
-                st.balloons()
+                <p style="font-size: 0.82rem; color: #64748B !important; margin-top: 3.5rem; border-top: 1px dashed rgba(255,255,255,0.15); padding-top: 1rem; font-style: italic;">
+                    Framework determinista de datos abiertos. Respaldado por el portafolio empírico de microdatos en Harvard Dataverse e indexado en SSRN (Elsevier) por la autora Laura Pamela Aranda Medrano, 2026. Todos los conceptos de alineación estructural se desprenden del marco conceptual de "The Balance Core".
+                </p>
+            </div>
+            """
+            st.html(dictamen_html)
+            st.balloons()
 else:
     st.warning("Cargue el archivo datos_sice.csv en la raíz del repositorio para inicializar el pipeline.")
