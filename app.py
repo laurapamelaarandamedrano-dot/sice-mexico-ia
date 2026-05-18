@@ -12,66 +12,41 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# 2. INYECCIÓN ABSOLUTA Y DESMANTELAMIENTO DE CAPAS OSCURAS (Solución Raíz)
-video_path = "assets/globo_futurista.mp4"
+# 2. INYECCIÓN DEL FONDO CÓSMICO FIJO DE ULTRA-ALTA DEFINICIÓN
+# Usamos una URL directa de Unsplash optimizada para fondos oscuros de desarrollo
+url_fondo_estrellas = "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?q=80&w=2560&auto=format&fit=crop"
 
-if os.path.exists(video_path):
-    import base64
-    with open(video_path, "rb") as video_file:
-        video_bytes = video_file.read()
-    video_base64 = base64.b64encode(video_bytes).decode()
+st.markdown(f"""
+    <style>
+    /* Inyección directa en la raíz absoluta de la aplicación */
+    .stApp, [data-testid="stAppViewMain"] {{
+        background-image: linear-gradient(rgba(10, 15, 30, 0.85), rgba(15, 23, 42, 0.85)), url("{url_fondo_estrellas}");
+        background-size: cover !important;
+        background-position: center !important;
+        background-attachment: fixed !important;
+        background-repeat: no-repeat !important;
+    }}
     
-    st.markdown(f"""
-        <style>
-        /* 1. Forzar al video a abarcar toda la pantalla física detrás de todo */
-        #background-video {{
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover;
-            z-index: -99999 !important;
-            opacity: 0.35;
-            pointer-events: none;
-        }}
-        
-        /* 2. APAGAR EL FONDO NEGRO DE LA RAÍZ DE LA APP (El verdadero culpable) */
-        html, body, .stApp, .stAppViewMain, [data-testid="stAppViewMain"] {{
-            background-color: transparent !important;
-            background: transparent !important;
-        }}
-
-        /* 3. Volver transparentes los bloques intermedios de contenido */
-        .stMain, .stMainBlockContainer, [data-testid="stMain"], [data-testid="stHeader"] {{
-            background-color: transparent !important;
-            background: transparent !important;
-        }}
-        
-        /* 4. Limpieza de márgenes estructurales molestos */
-        [data-testid="stMainBlockContainer"] {{
-            padding: 3rem 5rem !important;
-            max-width: 100% !important;
-        }}
-        
-        /* 5. Panel lateral con Glassmorphism oscuro para que contraste bonito */
-        .stSidebar, [data-testid="stSidebar"] {{
-            background-color: rgba(10, 15, 30, 0.93) !important;
-            backdrop-filter: blur(15px) !important;
-            border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
-        }}
-        </style>
-        
-        <video autoplay loop muted playsinline id="background-video">
-            <source src="data:video/mp4;base64,{video_base64}" type="video/mp4">
-        </video>
-    """, unsafe_allow_html=True)
-else:
-    st.markdown("""
-        <style>
-        .stApp { background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%); color: #F8FAFC; }
-        </style>
-    """, unsafe_allow_html=True)
+    /* Forzar transparencia en los bloques de contenido intermedio */
+    .stMain, .stHeader, [data-testid="stHeader"], [data-testid="stMain"], [data-testid="stVerticalBlock"] {{
+        background-color: transparent !important;
+        background: transparent !important;
+    }}
+    
+    /* Configuración refinada del margen contenedor */
+    [data-testid="stMainBlockContainer"] {{
+        padding: 3rem 5rem !important;
+        max-width: 100% !important;
+    }}
+    
+    /* Panel lateral elegante (Glassmorphism oscuro) */
+    .stSidebar, [data-testid="stSidebar"] {{
+        background-color: rgba(10, 15, 30, 0.94) !important;
+        backdrop-filter: blur(15px) !important;
+        border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+    }}
+    </style>
+""", unsafe_allow_html=True)
 
 # 3. ESTILOS DE TIPOGRAFÍA Y INTERFAZ DE ALTA DIRECCIÓN
 st.markdown("""
@@ -82,16 +57,16 @@ st.markdown("""
     .subtitle { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.15rem; color: #94A3B8; margin-bottom: 2.5rem; font-weight: 300; }
     
     /* Tarjeta de marco teórico */
-    .theory-card { background: rgba(15, 23, 42, 0.85); color: #F8FAFC; padding: 2.2rem; border-radius: 1rem; margin-bottom: 2.5rem; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(8px); }
+    .theory-card { background: rgba(15, 23, 42, 0.75); color: #F8FAFC; padding: 2.2rem; border-radius: 1rem; margin-bottom: 2.5rem; border: 1px solid rgba(255,255,255,0.08); backdrop-filter: blur(8px); }
     .theory-title { font-family: 'Fraunces', serif; font-size: 1.7rem; color: #38BDF8; font-style: italic; margin-bottom: 1rem; }
     
     /* Cajas métricas flotantes */
-    .metric-box { background-color: rgba(15, 23, 42, 0.75); padding: 1.4rem; border-radius: 0.75rem; border: 1px solid rgba(255,255,255,0.1); text-align: center; backdrop-filter: blur(6px); box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+    .metric-box { background-color: rgba(15, 23, 42, 0.70); padding: 1.4rem; border-radius: 0.75rem; border: 1px solid rgba(255,255,255,0.08); text-align: center; backdrop-filter: blur(6px); box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
     .metric-label { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.08em; color: #94A3B8; font-weight: 600; }
     .metric-val { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.1rem; font-weight: 800; margin-top: 0.2rem; }
     
     /* El contenedor ejecutivo premium para el Dictamen */
-    .memo-container { background: rgba(10, 15, 30, 0.94); border: 1px solid rgba(255, 255, 255, 0.15); padding: 2.5rem; border-radius: 12px; box-shadow: 0 30px 60px -15px rgba(0,0,0,0.7); backdrop-filter: blur(20px); margin-top: 2rem; font-family: 'Plus Jakarta Sans', sans-serif; color: #F8FAFC; }
+    .memo-container { background: rgba(10, 15, 30, 0.90); border: 1px solid rgba(255, 255, 255, 0.12); padding: 2.5rem; border-radius: 12px; box-shadow: 0 30px 60px -15px rgba(0,0,0,0.7); backdrop-filter: blur(20px); margin-top: 2rem; font-family: 'Plus Jakarta Sans', sans-serif; color: #F8FAFC; }
     .memo-header { font-family: 'Fraunces', serif; font-size: 2.2rem; font-weight: 400; color: #FFFFFF; margin-bottom: 0.2rem; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 0.6rem; }
     .memo-meta { font-size: 0.88rem; color: #94A3B8; font-family: monospace; margin-bottom: 1.8rem; }
     .memo-section-title { font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94A3B8; margin-top: 2rem; margin-bottom: 0.8rem; border-bottom: 1px dashed rgba(255,255,255,0.15); padding-bottom: 0.3rem; }
@@ -105,7 +80,7 @@ st.markdown("""
 with st.sidebar:
     st.image("https://img.icons8.com/fluency/96/space-shield.png", width=70)
     st.markdown("<h3 style='margin:0; color:#FFFFFF;'>SICE-México AI</h3>", unsafe_allow_html=True)
-    st.caption("Engine v1.9 | Full-Screen Fixed")
+    st.caption("Engine v2.0 | Cosmic Edition")
     st.write("---")
     st.markdown("**📂 Portafolio Nacional Conectado:**")
     st.caption("✔️ `ime_2020.csv` (CONAPO)\n\n✔️ `03_iim_mex_eeuu.csv` (Migración)\n\n✔️ `usuarios_internet.csv` (INEGI)\n\n✔️ `biblioteca_aguas.csv` (CONAGUA)")
@@ -175,17 +150,17 @@ if df is not None:
         analisis_teorico = f"El territorio de {estado_selector} opera dentro de un marco de balance estructural proporcional. Su índice de dispersión analítica de D = {dispersion_D:.2f} denota que ninguna dimensión está canibalizando los recursos de otra."
         recom_1 = "**Preservación Dinámica del Modelo:** Institucionalizar el vector actual como línea base regulatoria para la planificación territorial estratégica."
         recom_2 = "**Monitoreo de Fluctuación Coetánea:** Implementar auditorías de varianza semestrales para detectar desviaciones antes de cruzar el umbral de fricción."
-        recom_3 = "**Optimización Estructurada:** Prohibir políticas de expansión acelerada en conectividad que no demuestren un acoplamiento simétrico."
+        recom_3 = "**Optimización Estructurada:** Prohibir políticas de expansión acelerada en conectividad que no demuestren un acoplamiento simétrico con las capacidades locales."
     else:
         clasificacion_sistema = "DISPERSIÓN CRÍTICA (Systemic Imbalance)"
         color_hex = "#EF4444"
         
         if dim_fracturada_codigo == "E" or E < 10.0:
             foco_diagnostico = "DÉFICIT ÉTICO-ECOLÓGICO POR SATURACIÓN INDUSTRIAL"
-            analisis_teorico = f"El vector de {estado_selector} muestra una severa sobreexplotación biofísica. El indicador hídrico de las bases de CONAGUA ({E:.1f}/25) delata que las presiones del nearshoring transnacional están rebasando la resiliencia local."
+            analisis_teorico = f"El vector de {estado_selector} muestra una severa sobreexplotación biofísica. El indicador hidrogeológico real extraído de las bases de CONAGUA ({E:.1f}/25) delata que las presiones del nearshoring transnacional están rebasando la resiliencia de las cuencas locales."
             recom_1 = "**Moratoria de Nearshoring Extractivo:** Suspender inmediatamente la entrega de licencias a corporaciones que demanden un consumo hídrico intensivo."
             recom_2 = "**Monitoreo Satelital Coetáneo:** Conectar la infraestructura de sensores de CONAGUA directamente al pipeline del SICE para auditar el abatimiento de acuíferos."
-            recom_3 = "**Equilibrio Planetario Mandatorio:** Anteponer los límites de supervivencia física analizados en tu obra (*When the Ground Gives Way*)."
+            recom_3 = "**Equilibrio Planetario Mandatorio:** Anteponer los límites de supervivencia física analizados en tu obra (*When the Ground Gives Way*) sobre los incentivos comerciales."
         elif dim_fracturada_codigo == "I":
             foco_diagnostico = "DISRUPCIÓN IDENTITARIA POR ALTA INTENSIDAD MIGRATORIA"
             analisis_teorico = f"Los microdatos del CONAPO detectan una fragmentación del tejido social en {estado_selector} ({I:.1f}/25). La alta intensidad migratoria transnacional genera una fuga crítica de capital social."
@@ -197,7 +172,7 @@ if df is not None:
             analisis_teorico = f"La entidad registra una hiper-conectividad digital ({C:.1f}/25) según los datos de la ENDUTIH-INEGI que desborda por completo sus capacidades institucionales de control ({S:.1f}/25)."
             recom_1 = "**Despliegue de Nodos de Red Soberana:** Mandatar que toda la metadata crítica gubernamental sea procesada en infraestructuras locales."
             recom_2 = "**Mitigación de Dependencias:** Sustituir dependencias tecnológicas críticas por plataformas de software abierto."
-            recom_3 = "**Gobernanza de Redes:** Vincular el despliegue de nueva infraestructura de conectividad a la maduración del eje Structure."
+            recom_3 = "**Gobernanza de Redes:** Vincular el despliegue de nueva infraestructura de conectividad a la maduración de las capacidades de auditoría del eje Structure."
         else:
             foco_diagnostico = "DEBILIDAD ESTRUCTURAL Y REZAGO DE CAPACIDAD"
             analisis_teorico = f"El algoritmo SICE reporta una parálisis en el eje de Structure ({S:.1f}/25), fuertemente condicionado por los altos índices de marginación e ineficiencia burocrática del territorio."
@@ -205,7 +180,7 @@ if df is not None:
             recom_2 = "**Inversión Proporcional Compensatoria:** Reorientar el gasto público estatal exclusivamente hacia los ejes rezagados."
             recom_3 = "**Blindaje Normativo:** Fortalecer el marco jurídico subnacional bajo principios de realismo periférico."
 
-    # 10. VISUALIZACIÓN DE BARRAS DIMENSIONALES SOBRE EL VIDEO
+    # 10. VISUALIZACIÓN DE BARRAS DIMENSIONALES SOBRE EL FONDO CÓSMICO
     st.write("##")
     col_p1, col_p2 = st.columns(2)
     with col_p1:
@@ -242,7 +217,7 @@ if df is not None:
             dictamen_html = f"""
             <div class="memo-container">
                 <div class="memo-header">Dictamen de Gobernanza Predictiva SICE-AI</div>
-                <div class="memo-meta">REF ID: SICE-{estado_selector[:3].upper()}-2026-RESOLVED &nbsp;|&nbsp; EMISIÓN COMPLETA</div>
+                <div class="memo-meta">REF ID: SICE-{estado_selector[:3].upper()}-2026-RESOLVED &nbsp;|&nbsp; EMISIÓN EMÉRITA</div>
                 
                 <div class="memo-section-title">Eje de Ruptura Multidimensional Encontrado</div>
                 <p style="font-size: 1.35rem; font-weight: 800; color: {color_hex} !important; margin: 0.5rem 0 1.5rem 0;">
@@ -250,7 +225,7 @@ if df is not None:
                 </p>
                 
                 <div class="memo-section-title">Evaluación Macrodinámica del Vector</div>
-                <p style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: #E2E8F0 !important; background: rgba(255,255,255,0.04); padding: 1.2rem; border-radius: 6px; border-left: 4px solid {color_hex}; margin-bottom: 1.5rem;">
+                <p style="font-size: 1.05rem; line-height: 1.7; font-style: italic; color: #E2E8F0 !important; background: rgba(255,255,255,0.03); padding: 1.2rem; border-radius: 6px; border-left: 4px solid {color_hex}; margin-bottom: 1.5rem;">
                     "{analisis_teorico}"
                 </p>
                 
