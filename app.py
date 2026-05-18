@@ -55,16 +55,35 @@ st.markdown("""
     .main-title { font-family: 'Fraunces', serif; font-size: 3.6rem; font-weight: 700; color: #FFFFFF; margin-bottom: 0.1rem; text-shadow: 0 4px 15px rgba(0,0,0,0.6); }
     .subtitle { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.15rem; color: #A0AEC0; margin-bottom: 2.5rem; font-weight: 300; letter-spacing: 0.02em; }
     
-    /* CORRECCIÓN DE OPACIDAD: Tarjeta de marco teórico con máxima opacidad para perfecta lectura */
+    /* SOLUCIÓN AL ENTRABADO DEL EXPANDER: Forzar transparencia total en el contenedor nativo de Streamlit */
+    [data-testid="stExpander"], 
+    .streamlit-expanderHeader, 
+    .streamlit-expanderContent,
+    div[data-styled-id] > details {{
+        background-color: transparent !important;
+        background: transparent !important;
+        border: none !important;
+        box-shadow: none !important;
+    }}
+
+    /* Estilización del título del expander nativo para que sea legible y elegante */
+    .streamlit-expanderHeader p {{
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+        color: #38BDF8 !important;
+        font-weight: 600 !important;
+        font-size: 1.1rem !important;
+    }}
+    
+    /* Tarjeta de marco teórico blindada: Máxima opacidad y contraste aislado */
     .theory-card { 
         background: rgba(11, 17, 33, 0.98) !important; 
         color: #F8FAFC !important; 
         padding: 2.5rem; 
         border-radius: 12px; 
-        margin-top: 1rem;
-        margin-bottom: 1rem; 
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem; 
         border: 1px solid rgba(56, 189, 248, 0.25); 
-        box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.6);
     }
     .theory-title { font-family: 'Fraunces', serif; font-size: 1.8rem; color: #38BDF8; font-style: italic; margin-bottom: 1.2rem; }
     
@@ -86,16 +105,13 @@ st.markdown("""
     .metric-val { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2.1rem; font-weight: 800; margin-top: 0.2rem; }
     
     /* El contenedor ejecutivo premium para el Dictamen */
-    .memo-container { background: rgba(9, 13, 26, 0.96); border: 1px solid rgba(255, 255, 255, 0.12); padding: 2.5rem; border-radius: 12px; box-shadow: 0 30px 60px -15 rgba(0,0,0,0.8); backdrop-filter: blur(25px); margin-top: 2rem; font-family: 'Plus Jakarta Sans', sans-serif; color: #F8FAFC; }
+    .memo-container { background: rgba(9, 13, 26, 0.96); border: 1px solid rgba(255, 255, 255, 0.12); padding: 2.5rem; border-radius: 12px; box-shadow: 0 30px 60px -15px rgba(0,0,0,0.8); backdrop-filter: blur(25px); margin-top: 2rem; font-family: 'Plus Jakarta Sans', sans-serif; color: #F8FAFC; }
     .memo-header { font-family: 'Fraunces', serif; font-size: 2.2rem; font-weight: 400; color: #FFFFFF; margin-bottom: 0.2rem; border-bottom: 1px solid rgba(255,255,255,0.15); padding-bottom: 0.6rem; }
     .memo-meta { font-size: 0.88rem; color: #94A3B8; font-family: monospace; margin-bottom: 1.8rem; }
     .memo-section-title { font-size: 0.95rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94A3B8; margin-top: 2rem; margin-bottom: 0.8rem; border-bottom: 1px dashed rgba(255,255,255,0.15); padding-bottom: 0.3rem; }
     
     /* Forzar estilos de textos globales */
     .stMarkdown, p, span, label, h3 { font-family: 'Plus Jakarta Sans', sans-serif !important; color: #FFFFFF !important; }
-    
-    /* Forzar que el texto dentro del expander de Streamlit sea visible y no se rompa */
-    .stContentBlock {{ background-color: transparent !important; }}
     </style>
 """, unsafe_allow_html=True)
 
@@ -131,8 +147,8 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# 6. EXPLICACIÓN DE LA LÓGICA DE BALANCE INTERACTIVA (CORREGIDA E INYECTADA CON MÁXIMO CONTRASTE)
- st.expander("📖 EXPLICACIÓN CIENTÍFICA: La Ontología y Epistemología del Balance Core"):
+# 6. EXPLICACIÓN DE LA LÓGICA DE BALANCE INTERACTIVA (CORREGIDA CON ELIMINACIÓN DE CAPAS NEGRAS NATIVAS)
+with st.expander("📖 La Ontología y Epistemología del Balance Core"):
     st.markdown("""
     <div class="theory-card">
         <div class="theory-title">La Ontología del Balance Sistémico y Multidimensional</div>
