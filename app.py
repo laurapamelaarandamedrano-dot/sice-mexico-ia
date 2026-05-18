@@ -3,38 +3,36 @@ import pandas as pd
 import numpy as np
 import os
 import time
+import random
 
 # ─────────────────────────────────────────────────────────
 #  CONFIGURACIÓN DE PÁGINA
 # ─────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="SICE-México AI | Ecosistema Analítico",
-    page_icon="🇲🇽",
+    page_icon="🦋",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# ─────────────────────────────────────────────────────────
-#  ESTILOS GLOBALES
-# ─────────────────────────────────────────────────────────
 STAR_BG = "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?q=80&w=2560&auto=format&fit=crop"
 
+# ─────────────────────────────────────────────────────────
+#  CSS GLOBAL
+# ─────────────────────────────────────────────────────────
 css = f"""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=DM+Mono:wght@400;500&display=swap');
 
 /* ── Fondo de estrellas ── */
 .stApp {{
     background-image:
-        linear-gradient(180deg, rgba(4,8,20,0.92) 0%, rgba(6,12,28,0.88) 100%),
+        linear-gradient(180deg, rgba(3,6,16,0.93) 0%, rgba(5,10,24,0.90) 100%),
         url("{STAR_BG}");
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
-    background-repeat: no-repeat;
 }}
-
-/* ── Capas intermedias transparentes ── */
 .stMain, .stHeader,
 [data-testid="stHeader"],
 [data-testid="stMain"],
@@ -42,278 +40,194 @@ css = f"""
 [data-testid="stAppViewMain"] {{
     background: transparent !important;
 }}
-
-/* ── Contenedor principal ── */
 [data-testid="stMainBlockContainer"] {{
-    padding: 3.5rem 6rem !important;
+    padding: 3rem 5.5rem !important;
     max-width: 100% !important;
 }}
 
 /* ── Sidebar ── */
 .stSidebar, [data-testid="stSidebar"] {{
-    background: rgba(4, 7, 18, 0.97) !important;
+    background: rgba(3, 5, 14, 0.98) !important;
     backdrop-filter: blur(24px) !important;
-    border-right: 1px solid rgba(99,179,237,0.12) !important;
+    border-right: 1px solid rgba(99,179,237,0.10) !important;
 }}
 
 /* ── Tipografía global ── */
-html, body, .stMarkdown, p, span, label, div, li {{
+html, body, .stMarkdown, p, span, label, div, li, h1, h2, h3, h4 {{
     font-family: 'DM Sans', sans-serif !important;
     color: #e2e8f0 !important;
 }}
 
-/* ── Selectbox / widgets ── */
+/* ── Selectbox ── */
 [data-testid="stSelectbox"] label,
 [data-testid="stWidgetLabel"] {{
     font-family: 'DM Mono', monospace !important;
-    font-size: 0.78rem !important;
-    letter-spacing: 0.1em !important;
+    font-size: 0.72rem !important;
+    letter-spacing: 0.12em !important;
     text-transform: uppercase !important;
     color: #63b3ed !important;
 }}
 
-/* ── Encabezado principal ── */
-.sice-hero {{
-    padding: 2.5rem 0 1rem 0;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    margin-bottom: 2.5rem;
-}}
+/* ── Hero ── */
 .sice-eyebrow {{
     font-family: 'DM Mono', monospace;
-    font-size: 0.72rem;
-    letter-spacing: 0.22em;
+    font-size: 0.68rem;
+    letter-spacing: 0.24em;
     text-transform: uppercase;
     color: #63b3ed;
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.5rem;
 }}
 .sice-title {{
     font-family: 'Syne', sans-serif;
-    font-size: clamp(2.4rem, 5vw, 3.8rem);
+    font-size: clamp(2.6rem, 5vw, 4rem);
     font-weight: 800;
     color: #ffffff;
-    line-height: 1.08;
-    letter-spacing: -0.02em;
-    margin: 0 0 0.5rem 0;
+    line-height: 1.06;
+    letter-spacing: -0.025em;
+    margin: 0 0 0.6rem 0;
 }}
 .sice-subtitle {{
     font-family: 'DM Sans', sans-serif;
-    font-size: 1.05rem;
-    color: #718096;
+    font-size: 1rem;
+    color: #4a5568;
     font-weight: 300;
-    letter-spacing: 0.01em;
-    max-width: 72ch;
-    line-height: 1.6;
+    line-height: 1.65;
+    max-width: 70ch;
+    margin-bottom: 2rem;
 }}
 
-/* ── Banner de alerta ── */
+/* ── Banner ── */
 .status-banner {{
     display: flex;
     gap: 1rem;
     align-items: flex-start;
-    background: rgba(251,191,36,0.05);
-    border: 1px solid rgba(251,191,36,0.25);
+    background: rgba(251,191,36,0.04);
+    border: 1px solid rgba(251,191,36,0.2);
     border-left: 3px solid #f59e0b;
-    padding: 1.1rem 1.4rem;
+    padding: 1rem 1.3rem;
     border-radius: 8px;
     margin-bottom: 2.5rem;
-    font-size: 0.88rem;
+    font-size: 0.86rem;
     line-height: 1.65;
     color: #fde68a;
 }}
 .status-banner strong {{ color: #fef3c7 !important; }}
 
-/* ── Barras de dimensión ── */
-.dim-row {{
-    margin-bottom: 1.4rem;
-}}
-.dim-label {{
+/* ── Barras dimensionales ── */
+.dim-section-label {{
     font-family: 'DM Mono', monospace;
-    font-size: 0.76rem;
-    letter-spacing: 0.1em;
+    font-size: 0.64rem;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: #94a3b8;
-    margin-bottom: 0.4rem;
+    color: #63b3ed;
+    margin-bottom: 1.2rem;
+}}
+.dim-row {{ margin-bottom: 1.5rem; }}
+.dim-header {{
     display: flex;
     justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.45rem;
+}}
+.dim-name {{
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #718096;
+}}
+.dim-score {{
+    font-family: 'Syne', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
 }}
 .dim-track {{
-    background: rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.05);
     border-radius: 99px;
-    height: 6px;
-    overflow: hidden;
+    height: 5px;
+    overflow: visible;
     position: relative;
 }}
 .dim-fill {{
     height: 100%;
     border-radius: 99px;
-    transition: width 0.6s cubic-bezier(.4,0,.2,1);
     position: relative;
+    transition: width 0.7s cubic-bezier(.4,0,.2,1);
 }}
 .dim-fill::after {{
     content: '';
     position: absolute;
-    right: 0;
+    right: -1px;
     top: 50%;
     transform: translateY(-50%);
-    width: 10px;
-    height: 10px;
+    width: 9px; height: 9px;
     border-radius: 50%;
     background: inherit;
-    filter: brightness(1.4);
-    box-shadow: 0 0 8px currentColor;
+    filter: brightness(1.5);
+    box-shadow: 0 0 10px currentColor;
 }}
 
-/* ── Tarjetas métricas ── */
+/* ── Métricas ── */
 .metric-grid {{
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 1.2rem;
-    margin: 2rem 0;
+    gap: 1rem;
+    margin: 2rem 0 1.5rem;
 }}
 .metric-card {{
-    background: rgba(8, 14, 32, 0.8);
+    background: rgba(6, 11, 26, 0.85);
     border: 1px solid rgba(255,255,255,0.07);
     border-radius: 12px;
-    padding: 1.6rem 1.4rem;
+    padding: 1.5rem 1.3rem;
     text-align: center;
     backdrop-filter: blur(12px);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.35);
     transition: border-color 0.3s;
 }}
-.metric-card:hover {{ border-color: rgba(99,179,237,0.25); }}
-.metric-label {{
+.metric-card:hover {{ border-color: rgba(99,179,237,0.22); }}
+.metric-lbl {{
     font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.14em;
+    font-size: 0.62rem;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: #4a5568;
-    margin-bottom: 0.7rem;
+    color: #2d3748;
+    margin-bottom: 0.65rem;
 }}
 .metric-val {{
     font-family: 'Syne', sans-serif;
-    font-size: 2rem;
+    font-size: 1.95rem;
     font-weight: 800;
     line-height: 1;
 }}
 
-/* ── Memorándum ejecutivo ── */
-.memo-shell {{
-    background: rgba(6, 10, 24, 0.97);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 14px;
-    padding: 0;
-    overflow: hidden;
-    box-shadow: 0 40px 80px -20px rgba(0,0,0,0.85);
-    margin-top: 2rem;
-}}
-.memo-topbar {{
-    padding: 0.5rem 2rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: rgba(255,255,255,0.025);
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-}}
-.memo-dot {{
-    width: 10px; height: 10px;
-    border-radius: 50%;
-    display: inline-block;
-}}
-.memo-body {{ padding: 2.2rem 2.8rem 2.8rem; }}
-.memo-title {{
-    font-family: 'Syne', sans-serif;
-    font-size: 1.7rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin-bottom: 0.2rem;
-}}
-.memo-ref {{
+/* ── Sección labels ── */
+.section-label {{
     font-family: 'DM Mono', monospace;
-    font-size: 0.72rem;
-    letter-spacing: 0.1em;
-    color: #4a5568;
-    margin-bottom: 2rem;
-}}
-.memo-section {{
-    font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 0.16em;
+    font-size: 0.64rem;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: #4a5568;
-    padding-bottom: 0.4rem;
-    border-bottom: 1px dashed rgba(255,255,255,0.08);
-    margin-top: 2rem;
-    margin-bottom: 0.9rem;
+    color: #63b3ed;
+    margin-bottom: 0.3rem;
 }}
-.memo-finding {{
-    font-family: 'Syne', sans-serif;
-    font-size: 1.2rem;
-    font-weight: 700;
-    margin: 0.4rem 0 1.5rem;
-}}
-.memo-analysis {{
+.section-caption {{
     font-family: 'DM Sans', sans-serif;
-    font-size: 0.97rem;
-    line-height: 1.75;
-    font-style: italic;
-    color: #94a3b8;
-    background: rgba(255,255,255,0.02);
-    padding: 1.2rem 1.4rem;
-    border-radius: 8px;
-    border-left: 3px solid;
-    margin-bottom: 1.5rem;
-}}
-.memo-rec-list {{
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 0.9rem;
-}}
-.memo-rec-item {{
-    display: flex;
-    gap: 1rem;
-    align-items: flex-start;
-    font-size: 0.93rem;
-    line-height: 1.6;
-    color: #cbd5e1;
-    background: rgba(255,255,255,0.02);
-    border: 1px solid rgba(255,255,255,0.05);
-    border-radius: 8px;
-    padding: 0.9rem 1.1rem;
-}}
-.rec-num {{
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    font-weight: 500;
-    color: #4a5568;
-    padding-top: 0.1rem;
-    flex-shrink: 0;
-}}
-.memo-footer {{
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
+    font-size: 0.83rem;
     color: #2d3748;
-    margin-top: 2.5rem;
-    padding-top: 1rem;
-    border-top: 1px dashed rgba(255,255,255,0.07);
-    line-height: 1.7;
+    margin-bottom: 1rem;
 }}
 
-/* ── Botón principal ── */
+/* ── Botón ── */
 .stButton > button {{
     background: linear-gradient(135deg, #1a56db 0%, #0e3fa8 100%) !important;
     color: #fff !important;
     font-family: 'DM Mono', monospace !important;
-    font-size: 0.78rem !important;
+    font-size: 0.74rem !important;
     letter-spacing: 0.12em !important;
     text-transform: uppercase !important;
     border: none !important;
     border-radius: 8px !important;
     padding: 0.75rem 2rem !important;
-    cursor: pointer !important;
-    box-shadow: 0 4px 20px rgba(26,86,219,0.35) !important;
+    box-shadow: 0 4px 20px rgba(26,86,219,0.3) !important;
     transition: all 0.25s ease !important;
 }}
 .stButton > button:hover {{
@@ -321,18 +235,169 @@ html, body, .stMarkdown, p, span, label, div, li {{
     box-shadow: 0 8px 28px rgba(26,86,219,0.5) !important;
 }}
 
-/* ── Divisor ── */
+/* ── Memorándum ── */
+.memo-shell {{
+    background: rgba(5, 8, 20, 0.98);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 40px 80px -20px rgba(0,0,0,0.9);
+    margin-top: 1.5rem;
+}}
+.memo-topbar {{
+    padding: 0.45rem 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: rgba(255,255,255,0.02);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}}
+.memo-dot {{ width: 9px; height: 9px; border-radius: 50%; display: inline-block; }}
+.memo-wintitle {{
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    color: #1a202c;
+    margin-left: 0.5rem;
+    letter-spacing: 0.1em;
+}}
+.memo-body {{ padding: 2rem 2.6rem 2.6rem; }}
+.memo-title {{
+    font-family: 'Syne', sans-serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 0.15rem;
+}}
+.memo-ref {{
+    font-family: 'DM Mono', monospace;
+    font-size: 0.67rem;
+    color: #2d3748;
+    letter-spacing: 0.08em;
+    margin-bottom: 2rem;
+}}
+.memo-sec {{
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #2d3748;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px dashed rgba(255,255,255,0.07);
+    margin-top: 1.8rem;
+    margin-bottom: 0.8rem;
+}}
+.memo-finding {{
+    font-family: 'Syne', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 0.3rem 0 1.3rem;
+}}
+.memo-analysis {{
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.94rem;
+    line-height: 1.78;
+    font-style: italic;
+    color: #718096;
+    background: rgba(255,255,255,0.02);
+    padding: 1.1rem 1.3rem;
+    border-radius: 8px;
+    border-left: 3px solid;
+    margin-bottom: 1.5rem;
+}}
+.memo-rec-list {{
+    list-style: none;
+    padding: 0; margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}}
+.memo-rec-item {{
+    display: grid;
+    grid-template-columns: 2rem 1fr;
+    gap: 0.9rem;
+    align-items: flex-start;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+}}
+.rec-num {{
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: #2d3748;
+    padding-top: 0.15rem;
+}}
+.rec-title {{
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #e2e8f0;
+    margin-bottom: 0.2rem;
+}}
+.rec-body {{
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.83rem;
+    color: #4a5568;
+    line-height: 1.6;
+}}
+.memo-footer {{
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    color: #1a202c;
+    margin-top: 2.5rem;
+    padding-top: 0.9rem;
+    border-top: 1px dashed rgba(255,255,255,0.06);
+    line-height: 1.75;
+}}
+
+/* ── Mariposas Monarca ── */
+@keyframes monarchFly {{
+    0%   {{ transform: translateY(0) translateX(0) rotate(-3deg); opacity: 1; }}
+    20%  {{ transform: translateY(-22vh) translateX(18px) rotate(6deg); opacity: 1; }}
+    45%  {{ transform: translateY(-50vh) translateX(-12px) rotate(-4deg); opacity: 0.9; }}
+    70%  {{ transform: translateY(-75vh) translateX(22px) rotate(7deg); opacity: 0.55; }}
+    100% {{ transform: translateY(-105vh) translateX(-8px) rotate(0deg); opacity: 0; }}
+}}
+@keyframes wingFlap {{
+    0%, 100% {{ transform: scaleX(1); }}
+    50%       {{ transform: scaleX(0.45); }}
+}}
+.butterfly-container {{
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    pointer-events: none;
+    z-index: 9999;
+    height: 100vh;
+    overflow: hidden;
+}}
+.butterfly {{
+    position: absolute;
+    bottom: -50px;
+    animation: monarchFly linear forwards;
+    display: inline-block;
+}}
+.butterfly span {{
+    display: inline-block;
+    animation: wingFlap 0.38s ease-in-out infinite;
+}}
+
+/* ── Divisores ── */
 hr {{ border-color: rgba(255,255,255,0.06) !important; }}
 
-/* ── Modo accesible: alto contraste ── */
+/* ── Accesibilidad ── */
 @media (prefers-contrast: more) {{
-    .sice-subtitle, .metric-label, .memo-ref {{ color: #cbd5e1 !important; }}
+    .sice-subtitle, .metric-lbl, .memo-ref, .rec-body, .memo-footer,
+    .section-caption {{ color: #94a3b8 !important; }}
     .memo-analysis {{ color: #e2e8f0 !important; }}
-    .dim-label {{ color: #e2e8f0 !important; }}
+    .dim-name {{ color: #94a3b8 !important; }}
+    .pill-desc {{ color: #718096 !important; }}
+}}
+@media (prefers-reduced-motion: reduce) {{
+    .butterfly {{ animation: none !important; opacity: 0 !important; }}
+    .dim-fill {{ transition: none !important; }}
 }}
 </style>
 """
-
 st.markdown(css, unsafe_allow_html=True)
 
 
@@ -341,53 +406,50 @@ st.markdown(css, unsafe_allow_html=True)
 # ─────────────────────────────────────────────────────────
 with st.sidebar:
     st.markdown(
-        "<div style='font-family:Syne,sans-serif;font-size:1.3rem;font-weight:800;"
-        "color:#fff;letter-spacing:-0.01em;margin-bottom:0.15rem;'>SICE-México</div>"
-        "<div style='font-family:DM Mono,monospace;font-size:0.65rem;letter-spacing:0.18em;"
-        "text-transform:uppercase;color:#4a5568;margin-bottom:1.6rem;'>Core Engine v2.5</div>",
+        "<div style='font-family:Syne,sans-serif;font-size:1.25rem;font-weight:800;"
+        "color:#fff;letter-spacing:-0.01em;margin-bottom:0.1rem;'>SICE-México</div>"
+        "<div style='font-family:DM Mono,monospace;font-size:0.62rem;letter-spacing:0.18em;"
+        "text-transform:uppercase;color:#2d3748;margin-bottom:1.5rem;'>Core Engine v2.5</div>",
         unsafe_allow_html=True
     )
     st.write("---")
-
     st.markdown(
-        "<div style='font-family:DM Mono,monospace;font-size:0.65rem;letter-spacing:0.14em;"
-        "text-transform:uppercase;color:#63b3ed;margin-bottom:0.6rem;'>Gobernanza & Ciencia Abierta</div>",
+        "<div style='font-family:DM Mono,monospace;font-size:0.62rem;letter-spacing:0.14em;"
+        "text-transform:uppercase;color:#63b3ed;margin-bottom:0.65rem;'>Gobernanza & Ciencia Abierta</div>",
         unsafe_allow_html=True
     )
     st.caption(
-        "Este ecosistema opera bajo principios estrictos de **Ciencia Abierta**, "
-        "alojando su núcleo en un repositorio público de GitHub. Representa una muestra "
-        "nacional calibrada con proyecciones a escala global."
+        "Este ecosistema opera bajo principios de **Ciencia Abierta**, con su núcleo "
+        "alojado en un repositorio público de GitHub. Representa una muestra nacional "
+        "calibrada con proyecciones a escala global."
     )
     st.write("---")
-
     st.markdown(
-        "<div style='font-family:DM Mono,monospace;font-size:0.65rem;letter-spacing:0.14em;"
-        "text-transform:uppercase;color:#63b3ed;margin-bottom:0.6rem;'>Repositorios Indexados</div>",
+        "<div style='font-family:DM Mono,monospace;font-size:0.62rem;letter-spacing:0.14em;"
+        "text-transform:uppercase;color:#63b3ed;margin-bottom:0.65rem;'>Repositorios Indexados</div>",
         unsafe_allow_html=True
     )
-    repos = [
+    for fn, src in [
         ("ime_2020.csv", "CONAPO"),
         ("03_iim_mex_eeuu_2020_entidad.csv", "Migración"),
         ("13_personas_usuarios_internet.csv", "INEGI"),
         ("biblioteca_aguas_subterraneas.csv", "CONAGUA"),
-    ]
-    for fn, src in repos:
+    ]:
         st.markdown(
-            f"<div style='font-family:DM Mono,monospace;font-size:0.72rem;color:#4a5568;"
-            f"padding:0.35rem 0;border-bottom:1px solid rgba(255,255,255,0.04);'>"
-            f"<span style='color:#10b981;'>✔</span> <code style='color:#94a3b8;'>{fn}</code>"
-            f"<span style='float:right;color:#2d3748;'>{src}</span></div>",
+            f"<div style='font-family:DM Mono,monospace;font-size:0.7rem;color:#2d3748;"
+            f"padding:0.32rem 0;border-bottom:1px solid rgba(255,255,255,0.04);'>"
+            f"<span style='color:#10b981;margin-right:0.4rem;'>✔</span>"
+            f"<code style='color:#718096;background:transparent;'>{fn}</code>"
+            f"<span style='float:right;color:#1a202c;'>{src}</span></div>",
             unsafe_allow_html=True
         )
     st.write("---")
-
     st.markdown(
-        "<div style='font-family:DM Mono,monospace;font-size:0.65rem;letter-spacing:0.14em;"
-        "text-transform:uppercase;color:#63b3ed;margin-bottom:0.5rem;'>Investigadora Principal</div>"
+        "<div style='font-family:DM Mono,monospace;font-size:0.62rem;letter-spacing:0.14em;"
+        "text-transform:uppercase;color:#63b3ed;margin-bottom:0.45rem;'>Investigadora Principal</div>"
         "<div style='font-family:DM Sans,sans-serif;font-size:0.88rem;color:#e2e8f0;'>"
         "Laura Pamela Aranda Medrano</div>"
-        "<div style='font-family:DM Sans,sans-serif;font-size:0.78rem;color:#4a5568;margin-top:0.3rem;'>"
+        "<div style='font-family:DM Sans,sans-serif;font-size:0.76rem;color:#2d3748;margin-top:0.25rem;'>"
         "The Balance Core (2026)</div>",
         unsafe_allow_html=True
     )
@@ -397,19 +459,20 @@ with st.sidebar:
 #  HERO
 # ─────────────────────────────────────────────────────────
 st.markdown("""
-<div class="sice-hero">
+<div style="padding:2.5rem 0 0.5rem 0;">
     <div class="sice-eyebrow">Sistema de Inferencia Computacional Estratégica · México</div>
     <h1 class="sice-title">SICE-México AI</h1>
     <p class="sice-subtitle">
-        Ecosistema Computacional de Gobernanza Predictiva<br>
-        e Inferencia Macroestructural Subnacional
+        Ecosistema computacional de gobernanza predictiva e inferencia macroestructural subnacional.<br>
+        Un aporte a Michoacán, a México y al equilibrio del planeta.
     </p>
 </div>
+<hr style="border:none;border-top:1px solid rgba(255,255,255,0.06);margin:0 0 2.5rem 0;">
 """, unsafe_allow_html=True)
 
 st.markdown("""
 <div class="status-banner" role="alert" aria-live="polite">
-    <span style="font-size:1.1rem;flex-shrink:0;">⚠</span>
+    <span style="font-size:1rem;flex-shrink:0;">⚠</span>
     <span>
         <strong>Fase de Calibración Activa.</strong>
         Los módulos deterministas y capas predictivas están siendo sometidos a procesos
@@ -421,214 +484,192 @@ st.markdown("""
 
 
 # ─────────────────────────────────────────────────────────
-#  TARJETA TEÓRICA (HTML+MathJax — sin JS de acordeón)
+#  TARJETA TEÓRICA — KaTeX para fórmulas confiables
 # ─────────────────────────────────────────────────────────
 html_teoria = """
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-<script id="MathJax-script" async
-  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
-<script>
-MathJax = {
-  tex: { inlineMath: [['\\\\(','\\\\)']], displayMath: [['\\\\[','\\\\]']] },
-  options: { skipHtmlTags: ['script','noscript','style','textarea'] }
-};
-</script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{
+    delimiters:[
+      {left:'$$',right:'$$',display:true},
+      {left:'$',right:'$',display:false}
+    ],
+    throwOnError:false
+  });"></script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Mono:wght@400;500&display=swap');
+*,*::before,*::after{box-sizing:border-box;}
+body{margin:0;padding:0;background:transparent;font-family:'DM Sans',sans-serif;
+     color:#e2e8f0;-webkit-font-smoothing:antialiased;}
 
-*, *::before, *::after { box-sizing: border-box; }
-body {
-    margin: 0; padding: 0;
-    background: transparent;
-    font-family: 'DM Sans', sans-serif;
-    color: #e2e8f0;
-    -webkit-font-smoothing: antialiased;
-}
+details{background:rgba(6,10,24,0.96);border:1px solid rgba(99,179,237,0.18);border-radius:12px;overflow:hidden;}
+summary{display:flex;justify-content:space-between;align-items:center;
+        padding:1rem 1.5rem;cursor:pointer;
+        font-family:'DM Mono',monospace;font-size:0.72rem;letter-spacing:0.16em;text-transform:uppercase;
+        color:#63b3ed;background:rgba(10,16,36,0.9);
+        border-bottom:1px solid rgba(99,179,237,0.1);user-select:none;list-style:none;transition:background .2s;}
+summary::-webkit-details-marker{display:none;}
+summary:hover{background:rgba(20,28,55,0.9);}
+.icon{font-size:.6rem;color:#2d3748;transition:transform .3s;}
+details[open] .icon{transform:rotate(180deg);}
 
-details {
-    background: rgba(8, 14, 32, 0.92);
-    border: 1px solid rgba(99,179,237,0.2);
-    border-radius: 12px;
-    overflow: hidden;
-    backdrop-filter: blur(16px);
-}
+.panel{padding:1.8rem 2rem 2.2rem;}
+.theory-title{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:700;color:#fff;
+              margin:0 0 .85rem;letter-spacing:-.01em;}
+p{font-size:.92rem;line-height:1.78;color:#718096;margin-bottom:.95rem;}
+strong{color:#e2e8f0!important;}
 
-summary {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.1rem 1.6rem;
-    cursor: pointer;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.76rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: #63b3ed;
-    background: rgba(15,23,42,0.8);
-    border-bottom: 1px solid rgba(99,179,237,0.1);
-    user-select: none;
-    list-style: none;
-    transition: background 0.2s;
-}
-summary::-webkit-details-marker { display: none; }
-summary:hover { background: rgba(26,32,60,0.9); }
-summary .icon {
-    font-size: 0.65rem;
-    color: #4a5568;
-    transition: transform 0.3s;
-}
-details[open] summary .icon { transform: rotate(180deg); }
+.pill-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin:1.2rem 0;}
+.pill{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.07);border-radius:8px;padding:.8rem .9rem;}
+.pill-icon{font-size:.95rem;margin-bottom:.22rem;}
+.pill-name{font-family:'Syne',sans-serif;font-size:.78rem;font-weight:700;color:#fff;margin-bottom:.1rem;}
+.pill-desc{font-size:.74rem;color:#2d3748;line-height:1.5;}
 
-.panel { padding: 2rem 2.2rem 2.4rem; }
+.formula-wrap{background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.1);border-radius:10px;
+              padding:1.8rem 2rem;margin:1.4rem 0;text-align:center;overflow-x:auto;}
+.formula-label{font-family:'DM Mono',monospace;font-size:.62rem;letter-spacing:.18em;
+               text-transform:uppercase;color:#2d3748;margin-bottom:1.1rem;}
+/* KaTeX colores */
+.katex,.katex *{color:#f1f5f9!important;}
+.katex-display{margin:.4rem 0!important;}
+.katex-display>.katex{font-size:1.5rem!important;}
 
-.theory-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 1.45rem;
-    font-weight: 700;
-    color: #ffffff;
-    margin: 0 0 1rem 0;
-    letter-spacing: -0.01em;
-}
+.theorem-box{background:rgba(99,179,237,.05);border:1px solid rgba(99,179,237,.18);
+             border-radius:8px;padding:1rem 1.2rem;margin:1.3rem 0;
+             font-size:.87rem;line-height:1.72;color:#94a3b8;}
+.theorem-box strong{color:#63b3ed!important;}
+.thm-ok{color:#10b981!important;font-weight:700!important;}
+.thm-bad{color:#ef4444!important;}
 
-p {
-    font-size: 0.95rem;
-    line-height: 1.78;
-    color: #94a3b8;
-    margin-bottom: 1rem;
-}
+table.gbi{width:100%;border-collapse:collapse;margin:1.1rem 0;font-size:.82rem;}
+table.gbi th{font-family:'DM Mono',monospace;font-size:.6rem;letter-spacing:.12em;text-transform:uppercase;
+             color:#2d3748;padding:.5rem .75rem;text-align:left;border-bottom:1px solid rgba(255,255,255,.07);}
+table.gbi td{padding:.52rem .75rem;border-bottom:1px solid rgba(255,255,255,.04);color:#94a3b8;vertical-align:middle;}
+table.gbi tr:last-child td{border-bottom:none;}
+.badge{display:inline-block;padding:.18rem .55rem;border-radius:99px;
+       font-family:'DM Mono',monospace;font-size:.67rem;font-weight:500;}
 
-.dim-pills {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.8rem;
-    margin: 1.4rem 0;
-}
-.pill {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 8px;
-    padding: 0.85rem 1rem;
-}
-.pill-icon { font-size: 1rem; margin-bottom: 0.3rem; }
-.pill-name {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.82rem;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 0.15rem;
-}
-.pill-desc {
-    font-size: 0.78rem;
-    color: #4a5568;
-    line-height: 1.5;
-}
+.note{font-size:.76rem;color:#2d3748;font-style:italic;line-height:1.6;margin-top:.85rem;}
 
-.formula-block {
-    background: rgba(0,0,0,0.35);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 10px;
-    padding: 1.6rem 2rem;
-    margin: 1.6rem 0;
-    text-align: center;
-    overflow-x: auto;
-}
-
-.formula-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.64rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: #4a5568;
-    margin-bottom: 1rem;
-}
-
-.note {
-    font-size: 0.8rem;
-    color: #4a5568;
-    font-style: italic;
-    line-height: 1.6;
-    margin-top: 1rem;
-}
-
-/* Accesibilidad: texto legible en alto contraste */
-@media (prefers-contrast: more) {
-    p, .note { color: #e2e8f0 !important; }
-    .pill-desc { color: #94a3b8 !important; }
+@media(prefers-contrast:more){
+  p,.note,.pill-desc{color:#94a3b8!important;}
+  table.gbi td{color:#cbd5e1!important;}
 }
 </style>
 </head>
 <body>
 <details open>
   <summary>
-    <span>📖 &nbsp; Ontología y Epistemología del Balance Core</span>
+    <span>📖 &nbsp; The Balance Core — Ontología, Epistemología y Formalización</span>
     <span class="icon">▲</span>
   </summary>
   <div class="panel">
 
-    <h2 class="theory-title">La Ontología del Balance Sistémico y Multidimensional</h2>
+    <h2 class="theory-title">Un Marco para el Equilibrio Sistémico del Siglo XXI</h2>
 
     <p>
-      <strong style="color:#e2e8f0;">The Balance Core</strong> postula que la estabilidad
-      estructural de un territorio depende de la <em>alineación proporcional</em> y la
-      <em>tensión homeostática</em> de cuatro vectores vitales. A diferencia de enfoques
-      ortodoxos orientados hacia la acumulación unidimensional, este modelo detecta
-      cuándo un vector está canibalizando los recursos de otro.
+        <strong>The Balance Core</strong> es un marco teórico de relaciones internacionales que reimagina
+        la estabilidad no como la acumulación de poder, sino como el <em>equilibrio dinámico</em> entre
+        cuatro dimensiones fundamentales de la vida colectiva. Este modelo parte de una convicción
+        profunda: los territorios —desde un estado como Michoacán hasta una nación o el sistema planeta—
+        pierden resiliencia cuando alguna de sus dimensiones domina desproporcionadamente sobre las demás,
+        generando ciclos de extracción, exclusión o colapso que pueden identificarse y revertirse
+        antes de que escalen. No es una teoría <em>del</em> poder, sino una teoría <em>más allá</em> del poder.
     </p>
 
-    <div class="dim-pills">
+    <div class="pill-grid">
       <div class="pill">
         <div class="pill-icon">🏛️</div>
         <div class="pill-name">Structure (S)</div>
-        <div class="pill-desc">Capacidad institucional, solidez jurídica y resiliencia burocrática subnacional.</div>
+        <div class="pill-desc">Instituciones, gobernanza, sistemas económicos y capacidad burocrática subnacional. Una estructura equilibrada sostiene la vida sin coerción ni sobrecarga.</div>
       </div>
       <div class="pill">
         <div class="pill-icon">🧬</div>
         <div class="pill-name">Identity (I)</div>
-        <div class="pill-desc">Cohesión del tejido social, arraigo cultural y contención a la dispersión migratoria.</div>
+        <div class="pill-desc">Cohesión social, arraigo cultural y narrativa colectiva. Una identidad equilibrada evita tanto el nacionalismo excluyente como la disolución cultural.</div>
       </div>
       <div class="pill">
         <div class="pill-icon">🔌</div>
         <div class="pill-name">Connectivity (C)</div>
-        <div class="pill-desc">Densidad de redes, adopción digital e interconexión con flujos macroeconómicos globales.</div>
+        <div class="pill-desc">Redes, flujos de información, adopción digital e interdependencia global. Una conectividad equilibrada evita tanto el aislamiento como la dependencia explotadora.</div>
       </div>
       <div class="pill">
         <div class="pill-icon">🌱</div>
         <div class="pill-name">Planetary Ethics (E)</div>
-        <div class="pill-desc">Cumplimiento de límites biofísicos, sustentabilidad ecosistémica e hidrogeológica.</div>
+        <div class="pill-desc">Límites biofísicos, sustentabilidad ecosistémica y responsabilidad intergeneracional. No es un valor opcional: es un requisito práctico de supervivencia.</div>
       </div>
     </div>
 
-    <h3 style="font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;color:#63b3ed;
-               margin:1.8rem 0 0.7rem;letter-spacing:-0.01em;">
-      Formalización del Desequilibrio
-    </h3>
+    <h3 style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:#63b3ed;
+               margin:1.6rem 0 .6rem;letter-spacing:-.01em;">Formalización del Desequilibrio</h3>
 
     <p>
-      La vulnerabilidad territorial se cuantifica mediante el
-      <strong style="color:#e2e8f0;">Coeficiente de Dispersión Dimensional (D)</strong>,
-      calculado como la desviación estándar de los cuatro vectores sobre datos extraídos
-      de repositorios oficiales:
+        La vulnerabilidad territorial se cuantifica mediante el
+        <strong>Coeficiente de Dispersión Dimensional ($D$)</strong>,
+        calculado como la desviación estándar de los cuatro vectores sobre datos de repositorios oficiales.
+        Un valor alto de $D$ revela que el sistema está bajo tensión estructural:
+        una dimensión crece o colapsa mientras las demás quedan rezagadas.
     </p>
 
-    <div class="formula-block" role="math" aria-label="Fórmula del coeficiente de dispersión D">
+    <div class="formula-wrap" role="math" aria-label="Coeficiente de dispersión dimensional D">
       <div class="formula-label">Coeficiente de Dispersión Dimensional</div>
-      \\[
-        D = \\sigma(S,\\,I,\\,C,\\,E)
-          = \\sqrt{\\frac{1}{4}\\sum_{i=1}^{4}\\left(x_i - \\mu\\right)^{2}}
-      \\]
-      <p style="margin-top:1rem;font-size:0.85rem;color:#4a5568;">
-        donde \\(\\mu = \\dfrac{S+I+C+E}{4}\\) es la media dimensional del territorio.
+      $$D \;=\; \sigma(S,\,I,\,C,\,E) \;=\; \sqrt{\dfrac{1}{4}\sum_{i=1}^{4}\!\left(x_i - \mu\right)^{2}}$$
+      <p style="margin-top:1rem;font-size:.82rem;color:#4a5568;">
+        donde $\;\mu = \dfrac{S + I + C + E}{4}\;$ es la media dimensional del territorio.
       </p>
     </div>
 
+    <div class="theorem-box">
+      <strong>Teorema del Balance Core:</strong><br><br>
+      Si $\;S \approx I \approx C \approx E\;$ &nbsp;→&nbsp;
+        <span class="thm-ok">Estabilidad y resiliencia territorial</span><br>
+      Si $\;S \gg (I,C,E)\;$ &nbsp;→&nbsp; <span class="thm-bad">riesgo de coerción institucional</span><br>
+      Si $\;I \gg (S,C,E)\;$ &nbsp;→&nbsp; <span class="thm-bad">exclusión y conflicto identitario</span><br>
+      Si $\;C \gg (S,I,E)\;$ &nbsp;→&nbsp; <span class="thm-bad">vulnerabilidad por dependencia digital</span><br>
+      Si $\;E \ll (S,I,C)\;$ &nbsp;→&nbsp; <span class="thm-bad">colapso ecológico en curso</span>
+    </div>
+
+    <h3 style="font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:#63b3ed;
+               margin:1.6rem 0 .6rem;letter-spacing:-.01em;">Umbrales del Global Balance Index (GBI · 0–100)</h3>
+
+    <table class="gbi" aria-label="Umbrales del Global Balance Index">
+      <thead>
+        <tr><th>Rango</th><th>Clasificación</th><th>Descripción</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge" style="background:rgba(16,185,129,.15);color:#10b981;">80–100</span></td>
+          <td style="color:#10b981;">Poder Armonizado</td>
+          <td>Estable, influyente y adaptativo. Las cuatro dimensiones operan en sinergia.</td>
+        </tr>
+        <tr>
+          <td><span class="badge" style="background:rgba(99,179,237,.12);color:#63b3ed;">60–79</span></td>
+          <td style="color:#63b3ed;">Balance Condicional</td>
+          <td>Sólido pero con vulnerabilidades latentes en al menos una dimensión.</td>
+        </tr>
+        <tr>
+          <td><span class="badge" style="background:rgba(245,158,11,.12);color:#f59e0b;">40–59</span></td>
+          <td style="color:#f59e0b;">Actor en Desequilibrio</td>
+          <td>Una dimensión sobrepasa a las demás; requiere intervención estructural.</td>
+        </tr>
+        <tr>
+          <td><span class="badge" style="background:rgba(239,68,68,.12);color:#ef4444;">0–39</span></td>
+          <td style="color:#ef4444;">Inestabilidad Alta</td>
+          <td>Colapso estructural o identitario probable. Intervención urgente.</td>
+        </tr>
+      </tbody>
+    </table>
+
     <p class="note">
-      * Un valor de D ≤ 4.0 indica Equilibrio Coherente (Adaptive Coherence).
-        Valores superiores señalan Dispersión Crítica (Systemic Imbalance), donde al menos
-        un vector concentra o drena desproporcionadamente los recursos del sistema.
+      * El marco permite diagnosticar no sólo el nivel de equilibrio,
+      sino qué vector específico está generando la tensión sistémica —
+      orientando las recomendaciones de política pública hacia la causa raíz,
+      no hacia los síntomas superficiales.
     </p>
 
   </div>
@@ -636,8 +677,7 @@ p {
 </body>
 </html>
 """
-
-st.components.v1.html(html_teoria, height=640, scrolling=False)
+st.components.v1.html(html_teoria, height=800, scrolling=False)
 
 
 # ─────────────────────────────────────────────────────────
@@ -656,127 +696,220 @@ def cargar_datos():
     })
 
 df = cargar_datos()
-
 if df is None:
     st.warning("Cargue el archivo `datos_sice.csv` en la raíz del repositorio para inicializar el pipeline.")
     st.stop()
 
 
 # ─────────────────────────────────────────────────────────
-#  SELECTOR DE ENTIDAD
+#  SELECTOR
 # ─────────────────────────────────────────────────────────
-st.markdown(
-    "<div style='font-family:DM Mono,monospace;font-size:0.65rem;letter-spacing:0.18em;"
-    "text-transform:uppercase;color:#63b3ed;margin-bottom:0.4rem;'>— Interrogación del Vector Territorial</div>",
-    unsafe_allow_html=True
-)
+st.markdown("<div class='section-label'>— Interrogación del Vector Territorial</div>",
+            unsafe_allow_html=True)
 estado_selector = st.selectbox(
-    "Seleccione la entidad federativa a auditar:",
+    "Entidad:",
     df["estado"].sort_values().unique(),
     label_visibility="collapsed"
 )
 
-data_vector  = df[df["estado"] == estado_selector].iloc[0]
-S, I, C, E   = float(data_vector["S"]), float(data_vector["I"]), float(data_vector["C"]), float(data_vector["E"])
-
+row          = df[df["estado"] == estado_selector].iloc[0]
+S, I, C, E   = float(row["S"]), float(row["I"]), float(row["C"]), float(row["E"])
 gbi_total    = S + I + C + E
 valores      = [S, I, C, E]
 dispersion_D = float(np.std(valores))
-promedio_u   = float(np.mean(valores))
-desviaciones = [v - promedio_u for v in valores]
-idx_ruptura  = int(np.argmax(np.abs(desviaciones)))
-codigos_dim  = ["S", "I", "C", "E"]
-dim_fractura = codigos_dim[idx_ruptura]
+mu           = float(np.mean(valores))
+idx_ruptura  = int(np.argmax([abs(v - mu) for v in valores]))
+dim_fractura = ["S", "I", "C", "E"][idx_ruptura]
+EQUILIBRIO   = dispersion_D <= 4.0
 
-EQUILIBRIO = dispersion_D <= 4.0
 
+# ─────────────────────────────────────────────────────────
+#  DIAGNÓSTICO Y POLÍTICAS PÚBLICAS
+# ─────────────────────────────────────────────────────────
 if EQUILIBRIO:
     clasificacion = "EQUILIBRIO COHERENTE"
     color_hex     = "#10b981"
-    foco          = "DÉFICIT BAJO · COHERENCE ADAPTATIVA REGIONAL"
-    analisis      = (
-        f"El territorio de {estado_selector} opera dentro de un marco de balance estructural "
-        f"proporcional. Su índice de dispersión analítica D\u202f=\u202f{dispersion_D:.2f} indica que "
-        f"ninguna dimensión está canibalizando los recursos de otra. El sistema muestra resiliencia "
-        f"homeostática apta para políticas de consolidación progresiva."
+    foco          = f"COHERENCIA ADAPTATIVA REGIONAL · {estado_selector.upper()}"
+    analisis = (
+        f"{estado_selector} opera dentro de un marco de balance estructural saludable. "
+        f"Con una dispersión dimensional D\u202f=\u202f{dispersion_D:.2f}, las cuatro dimensiones del sistema "
+        f"mantienen una tensión homeostática positiva: ninguna crece a expensas de las demás. "
+        f"Esto no significa inmovilidad — significa que el territorio tiene la base para evolucionar "
+        f"sin desestabilizarse. El equilibrio es, según The Balance Core, la condición más escasa "
+        f"y más valiosa de un sistema territorial. Preservarla requiere tanta habilidad como alcanzarla."
     )
     recs = [
-        ("Preservación Dinámica del Modelo",
-         "Institucionalizar el vector actual como línea base regulatoria para la planificación territorial estratégica."),
-        ("Monitoreo de Fluctuación Coetánea",
-         "Implementar auditorías de varianza semestrales para detectar desviaciones antes de cruzar el umbral de fricción."),
-        ("Optimización Estructurada",
-         "Prohibir políticas de expansión acelerada en conectividad que no demuestren acoplamiento simétrico con capacidades locales."),
+        (
+            "Institucionalizar el vector actual como línea base regulatoria",
+            "El Gobierno del Estado debe codificar los niveles actuales de cada dimensión en un "
+            "documento de Política de Estabilidad Territorial que sirva como referencia obligatoria "
+            "para evaluar el impacto de cualquier nueva inversión, programa federal o regulación sectorial "
+            "antes de su implementación. Lo que no se mide, no se protege."
+        ),
+        (
+            "Crear un Observatorio Permanente de Equilibrio Subnacional",
+            "Establecer una unidad técnica interinstitucional (SEDESOL, SEFIN, IMPLAN) que actualice "
+            "trimestralmente los cuatro vectores del GBI con datos del INEGI, CONAPO y CONAGUA. "
+            "El objetivo no es vigilar, sino anticipar: detectar desviaciones antes de que crucen "
+            "el umbral de D\u202f>\u202f4.0 y requieran intervención de emergencia."
+        ),
+        (
+            "Blindar la conectividad para que no desborde la capacidad institucional",
+            "Toda política de expansión digital o inversión en infraestructura de conectividad "
+            "debe venir acompañada de un fortalecimiento equivalente en el eje Structure: "
+            "capacitación de servidores públicos, marcos de ciberseguridad y protocolos de "
+            "gobernanza de datos. La tecnología sin gobernanza genera dependencia, no desarrollo."
+        ),
     ]
+
 elif dim_fractura == "E" or E < 10.0:
     clasificacion = "DISPERSIÓN CRÍTICA"
     color_hex     = "#ef4444"
-    foco          = "DÉFICIT ÉTICO-ECOLÓGICO POR SATURACIÓN INDUSTRIAL"
-    analisis      = (
-        f"El vector de {estado_selector} exhibe sobreexplotación biofísica severa. "
-        f"El indicador hidrogeológico real extraído de CONAGUA ({E:.1f}/25) señala que las presiones "
-        f"del nearshoring transnacional están rebasando la resiliencia de las cuencas locales. "
-        f"El desequilibrio D\u202f=\u202f{dispersion_D:.2f} confirma la fractura del eje ambiental."
+    foco          = "DÉFICIT ÉTICO-ECOLÓGICO · SATURACIÓN BIOFÍSICA"
+    analisis = (
+        f"El vector de Planetary Ethics en {estado_selector} registra {E:.1f}/25, "
+        f"la brecha más severa del sistema (D\u202f=\u202f{dispersion_D:.2f}). "
+        f"Los datos de CONAGUA señalan que las presiones industriales y agroindustriales "
+        f"están superando la capacidad de regeneración de las cuencas locales. "
+        f"The Balance Core advierte con claridad: cuando la ética planetaria colapsa, "
+        f"las demás dimensiones son arrastradas con ella. No hay conectividad digital posible sin agua. "
+        f"No hay cohesión social posible sin territorio habitable. "
+        f"Esta es la ruptura más urgente, y la que tiene el costo de inacción más alto para las generaciones futuras."
     )
     recs = [
-        ("Moratoria de Nearshoring Extractivo",
-         "Suspender inmediatamente licencias a corporaciones con demanda hídrica intensiva mientras se recalibra la capacidad de las cuencas."),
-        ("Monitoreo Satelital Coetáneo",
-         "Conectar la infraestructura de sensores CONAGUA directamente al pipeline del SICE para auditar el abatimiento de acuíferos en tiempo real."),
-        ("Equilibrio Planetario Mandatorio",
-         "Anteponer los límites de supervivencia biofísica sobre incentivos comerciales en toda nueva regulación de inversión extranjera."),
+        (
+            "Establecer una moratoria técnica de concesiones de agua para uso industrial",
+            "El Gobierno del Estado debe solicitar formalmente a CONAGUA la suspensión temporal "
+            "de nuevas concesiones hídricas en acuíferos con índice de sobreexplotación confirmado, "
+            "hasta que se realice una auditoría independiente del balance hídrico regional. "
+            "Esta acción es técnica, no ideológica: es la diferencia entre un territorio viable "
+            "a 20 años y uno que no lo es."
+        ),
+        (
+            "Integrar los sensores de CONAGUA al tablero de gobernanza en tiempo real",
+            "Conectar los datos de abatimiento de acuíferos directamente al pipeline del SICE "
+            "para que los tomadores de decisiones reciban alertas automáticas cuando los niveles "
+            "críticos sean alcanzados. La información ambiental no puede llegar con meses de retraso "
+            "a los escritorios donde se toman decisiones de inversión."
+        ),
+        (
+            "Condicionar incentivos fiscales al cumplimiento del Índice de Ética Planetaria",
+            "Reorientar los estímulos fiscales estatales para que las empresas instaladas en el territorio "
+            "deban demostrar un balance positivo en el eje E antes de acceder a beneficios de operación. "
+            "No es una restricción al desarrollo: es un mecanismo para asegurar que el desarrollo "
+            "de hoy no hipoteque el territorio de las próximas generaciones."
+        ),
     ]
+
 elif dim_fractura == "I":
     clasificacion = "DISPERSIÓN CRÍTICA"
     color_hex     = "#ef4444"
-    foco          = "DISRUPCIÓN IDENTITARIA POR ALTA INTENSIDAD MIGRATORIA"
-    analisis      = (
-        f"Los microdatos del CONAPO detectan fragmentación del tejido social en {estado_selector} "
-        f"(I\u202f=\u202f{I:.1f}/25). La alta intensidad migratoria transnacional genera una fuga crítica "
-        f"de capital social que erosiona la cohesión comunitaria y debilita la capacidad de organización institucional local."
+    foco          = "FRAGMENTACIÓN IDENTITARIA · ALTA INTENSIDAD MIGRATORIA"
+    analisis = (
+        f"Los microdatos del CONAPO registran una fractura profunda en el tejido social de {estado_selector}: "
+        f"el vector Identity alcanza {I:.1f}/25, con D\u202f=\u202f{dispersion_D:.2f}. "
+        f"La migración de alta intensidad no es sólo un fenómeno demográfico: "
+        f"es la señal de que el territorio ha fallado en ofrecerle a su propia gente "
+        f"razones suficientes para quedarse. Cuando una comunidad pierde a sus jóvenes, "
+        f"pierde también su memoria institucional, su capacidad organizativa y su potencial de desarrollo endógeno. "
+        f"The Balance Core identifica esto como una pérdida sistémica que ninguna transferencia de remesas puede compensar por sí sola."
     )
     recs = [
-        ("Políticas de Arraigo Coetáneo",
-         "Destinar incentivos a la tecnificación del campo en regiones de expulsión demográfica para frenar la migración forzada."),
-        ("Fideicomisos de Resiliencia Social",
-         "Estructurar coinversión institucional con asociaciones de migrantes para transformar remesas en capital productivo endógeno."),
-        ("Estabilización del Entorno",
-         "Fortalecer mecanismos de cohesión comunitaria interna para blindar la identidad cultural regional."),
+        (
+            "Diseñar un Programa Estatal de Arraigo Productivo para zonas de alta expulsión",
+            "Focalizar inversión pública en tecnificación agrícola, acceso a mercados locales y "
+            "conectividad digital en los municipios con mayor índice de intensidad migratoria. "
+            "La lógica es directa: la migración disminuye cuando permanecer es económicamente viable. "
+            "Cada peso invertido en arraigo productivo ahorra décadas de fragmentación comunitaria."
+        ),
+        (
+            "Crear fideicomisos de coinversión con asociaciones de migrantes",
+            "Estructurar un mecanismo formal (3x1 ampliado) donde cada peso de remesas dirigido "
+            "a proyectos productivos sea apalancado con recursos estatales, municipales y federales. "
+            "El objetivo es transformar la remesa —que hoy es una transferencia de consumo— "
+            "en capital que genere empleo dentro del territorio y reduzca la necesidad de emigrar."
+        ),
+        (
+            "Institucionalizar la identidad territorial como activo estratégico",
+            f"Desarrollar una política de patrimonio cultural activo que vincule la identidad de "
+            f"{estado_selector} con oportunidades económicas concretas: turismo con retribución comunitaria, "
+            "denominaciones de origen y artesanías con acceso a mercados nacionales e internacionales. "
+            "La cultura no es decoración: es economía y es cohesión."
+        ),
     ]
+
 elif dim_fractura == "C":
     clasificacion = "DISPERSIÓN CRÍTICA"
     color_hex     = "#ef4444"
-    foco          = "DOMINANCIA ASIMÉTRICA DE CONECTIVIDAD DIGITAL"
-    analisis      = (
-        f"La entidad registra hiper-conectividad digital (C\u202f=\u202f{C:.1f}/25) según la ENDUTIH-INEGI, "
-        f"que desborda sus capacidades institucionales de control (S\u202f=\u202f{S:.1f}/25). "
-        f"La asimetría D\u202f=\u202f{dispersion_D:.2f} expone una brecha de gobernanza digital de riesgo sistémico."
+    foco          = "ASIMETRÍA DIGITAL · CONECTIVIDAD SIN GOBERNANZA"
+    analisis = (
+        f"Los datos de la ENDUTIH-INEGI revelan una hiper-conectividad digital en {estado_selector} "
+        f"(C\u202f=\u202f{C:.1f}/25) que desborda la capacidad institucional de regulación "
+        f"(S\u202f=\u202f{S:.1f}/25). La dispersión D\u202f=\u202f{dispersion_D:.2f} confirma la brecha. "
+        f"The Balance Core advierte: la conectividad sin gobernanza equivalente no es desarrollo, "
+        f"es vulnerabilidad. Un territorio altamente conectado pero con instituciones débiles "
+        f"está expuesto a dependencias tecnológicas, extracción de datos "
+        f"y pérdida de soberanía sobre su propia infraestructura crítica."
     )
     recs = [
-        ("Soberanía de Datos Gubernamentales",
-         "Mandatar que toda metadata crítica gubernamental sea procesada en infraestructuras locales soberanas."),
-        ("Sustitución de Dependencias Críticas",
-         "Migrar plataformas tecnológicas clave a soluciones de software abierto con capacidad de auditoría interna."),
-        ("Gobernanza de Redes",
-         "Vincular el despliegue de nueva infraestructura de conectividad a la maduración de capacidades de auditoría en el eje Structure."),
+        (
+            "Crear una Agencia Estatal de Soberanía Digital",
+            "Establecer una entidad técnica que audite qué datos públicos están siendo procesados "
+            "por infraestructuras ajenas al territorio, y que defina qué información gubernamental "
+            "crítica debe residir en servidores bajo jurisdicción local. "
+            "No se trata de cerrar fronteras digitales: se trata de saber qué ocurre dentro de ellas."
+        ),
+        (
+            "Condicionar el despliegue de nueva infraestructura de conectividad a la madurez institucional",
+            "Antes de aprobar expansión de redes 5G, centros de datos o plataformas de e-gobierno, "
+            "exigir que el eje Structure alcance paridad con el eje Connectivity. "
+            "Esto implica capacitar funcionarios, desarrollar marcos de ciberseguridad y "
+            "aprobar legislación de protección de datos subnacional."
+        ),
+        (
+            "Migrar plataformas críticas del gobierno a software abierto",
+            "Priorizar soluciones de código abierto en sistemas de salud, educación y administración pública. "
+            "Esto reduce la dependencia de proveedores externos, permite auditoría ciudadana y "
+            "genera capacidades técnicas locales que fortalecen el eje Structure "
+            "y reducen la asimetría con el eje Connectivity de forma simultánea."
+        ),
     ]
+
 else:
     clasificacion = "DISPERSIÓN CRÍTICA"
     color_hex     = "#ef4444"
-    foco          = "DEBILIDAD ESTRUCTURAL Y REZAGO INSTITUCIONAL"
-    analisis      = (
-        f"El algoritmo SICE reporta parálisis en el eje Structure (S\u202f=\u202f{S:.1f}/25), "
-        f"condicionado por altos índices de marginación e ineficiencia burocrática. "
-        f"La dispersión D\u202f=\u202f{dispersion_D:.2f} confirma que el rezago institucional actúa como "
-        f"cuello de botella para el desarrollo de los demás vectores."
+    foco          = "REZAGO ESTRUCTURAL · PARÁLISIS INSTITUCIONAL"
+    analisis = (
+        f"El algoritmo SICE detecta que el eje Structure en {estado_selector} "
+        f"(S\u202f=\u202f{S:.1f}/25) es la dimensión más rezagada del sistema (D\u202f=\u202f{dispersion_D:.2f}). "
+        f"Una estructura institucional débil no sólo es un problema administrativo: "
+        f"es el cuello de botella que impide que el potencial de las otras dimensiones "
+        f"se traduzca en bienestar real. The Balance Core es claro: "
+        f"sin instituciones que funcionen, la identidad no puede organizarse, "
+        f"la conectividad no puede regularse y la ética planetaria no puede implementarse. "
+        f"La reforma institucional no es una reforma más: es la condición de posibilidad de todas las demás."
     )
     recs = [
-        ("Automatización del Control Institucional",
-         "Implementar la matriz determinista SICE para erradicar procesos opacos y reducir la discrecionalidad burocrática."),
-        ("Inversión Proporcional Compensatoria",
-         "Reorientar el gasto público estatal exclusivamente hacia los ejes rezagados hasta restablecer el equilibrio dimensional."),
-        ("Blindaje Normativo",
-         "Fortalecer el marco jurídico subnacional bajo principios de realismo periférico y auditoría ciudadana continua."),
+        (
+            "Implementar un Índice de Desempeño Institucional subnacional con metas anuales",
+            "Establecer indicadores públicos y verificables de eficiencia burocrática, "
+            "tiempos de respuesta, transparencia presupuestal y resolución de trámites. "
+            "Vincular el avance en estos indicadores a los criterios de evaluación del presupuesto estatal. "
+            "Lo que no se mide públicamente, no mejora."
+        ),
+        (
+            "Reorientar el gasto público con criterio de equilibrio dimensional",
+            "Antes de aprobar gasto en los vectores que ya son fuertes, demostrar que el eje Structure "
+            "está siendo fortalecido de manera proporcional. "
+            "Esto no es austeridad: es arquitectura presupuestal inteligente que protege "
+            "la inversión ya realizada en conectividad e identidad."
+        ),
+        (
+            "Fortalecer el marco jurídico con énfasis en rendición de cuentas ciudadana",
+            "Promover reformas al marco normativo estatal que faciliten la participación ciudadana "
+            "en la auditoría del gasto, la denuncia de opacidad y la evaluación de programas públicos. "
+            "Una institucionalidad que no se somete a escrutinio externo no puede fortalecerse desde adentro."
+        ),
     ]
 
 
@@ -784,29 +917,29 @@ else:
 #  BARRAS DIMENSIONALES
 # ─────────────────────────────────────────────────────────
 st.write("")
-st.markdown(
-    "<div style='font-family:DM Mono,monospace;font-size:0.65rem;letter-spacing:0.18em;"
-    "text-transform:uppercase;color:#63b3ed;margin-bottom:1.2rem;'>— Mapa Vectorial Dimensional</div>",
-    unsafe_allow_html=True
-)
+st.markdown("<div class='dim-section-label'>— Mapa Vectorial Dimensional</div>",
+            unsafe_allow_html=True)
 
-dim_colors = {"S": "#63b3ed", "I": "#f6ad55", "C": "#76e4f7", "E": "#68d391"}
-dim_names  = {"S": "Structure", "I": "Identity", "C": "Connectivity", "E": "Planetary Ethics"}
-dim_vals   = {"S": S, "I": I, "C": C, "E": E}
+DIM_COLOR = {"S": "#63b3ed", "I": "#f6ad55", "C": "#76e4f7", "E": "#68d391"}
+DIM_NAME  = {"S": "Structure", "I": "Identity", "C": "Connectivity", "E": "Planetary Ethics"}
+DIM_VAL   = {"S": S, "I": I, "C": C, "E": E}
 
-col_left, col_right = st.columns(2)
-for idx, (key, val) in enumerate(dim_vals.items()):
-    col = col_left if idx < 2 else col_right
-    pct = val / 25 * 100
+col_l, col_r = st.columns(2)
+for idx, (key, val) in enumerate(DIM_VAL.items()):
+    pct  = val / 25 * 100
+    col  = col_l if idx < 2 else col_r
     col.markdown(f"""
 <div class="dim-row">
-  <div class="dim-label">
-    <span>{dim_names[key]} ({key})</span>
-    <span style="color:{dim_colors[key]};">{val:.1f} / 25</span>
+  <div class="dim-header">
+    <span class="dim-name">{DIM_NAME[key]} ({key})</span>
+    <span class="dim-score" style="color:{DIM_COLOR[key]};">
+      {val:.1f}<span style="font-size:.72rem;color:#2d3748;font-weight:400;"> / 25</span>
+    </span>
   </div>
-  <div class="dim-track" role="progressbar" aria-valuenow="{val:.1f}" aria-valuemin="0" aria-valuemax="25"
-       aria-label="{dim_names[key]}: {val:.1f} de 25">
-    <div class="dim-fill" style="width:{pct:.1f}%;background:{dim_colors[key]};"></div>
+  <div class="dim-track" role="progressbar"
+       aria-valuenow="{val:.1f}" aria-valuemin="0" aria-valuemax="25"
+       aria-label="{DIM_NAME[key]}: {val:.1f} de 25">
+    <div class="dim-fill" style="width:{pct:.1f}%;background:{DIM_COLOR[key]};"></div>
   </div>
 </div>
 """, unsafe_allow_html=True)
@@ -815,19 +948,36 @@ for idx, (key, val) in enumerate(dim_vals.items()):
 # ─────────────────────────────────────────────────────────
 #  MÉTRICAS
 # ─────────────────────────────────────────────────────────
+gbi_label = (
+    "Poder Armonizado"   if gbi_total >= 80 else
+    "Balance Condicional" if gbi_total >= 60 else
+    "Actor en Desequilibrio" if gbi_total >= 40 else
+    "Inestabilidad Alta"
+)
+
 st.markdown(f"""
 <div class="metric-grid" role="region" aria-label="Métricas del sistema">
   <div class="metric-card">
-    <div class="metric-label">Global Balance Index (GBI)</div>
-    <div class="metric-val" style="color:{color_hex};">{gbi_total:.1f}<span style="font-size:1rem;color:#4a5568;font-weight:400;">/100</span></div>
+    <div class="metric-lbl">Global Balance Index (GBI)</div>
+    <div class="metric-val" style="color:{color_hex};">
+      {gbi_total:.1f}<span style="font-size:.9rem;color:#2d3748;font-weight:400;">/100</span>
+    </div>
+    <div style="font-family:'DM Mono',monospace;font-size:.62rem;color:#2d3748;
+                letter-spacing:.08em;margin-top:.4rem;">{gbi_label}</div>
   </div>
   <div class="metric-card">
-    <div class="metric-label">Dispersión Dimensional (D)</div>
+    <div class="metric-lbl">Dispersión Dimensional (D)</div>
     <div class="metric-val" style="color:#e2e8f0;">{dispersion_D:.2f}</div>
+    <div style="font-family:'DM Mono',monospace;font-size:.62rem;color:#2d3748;
+                letter-spacing:.08em;margin-top:.4rem;">
+      {"D ≤ 4.0 · Equilibrio" if EQUILIBRIO else "D > 4.0 · Tensión sistémica"}
+    </div>
   </div>
   <div class="metric-card">
-    <div class="metric-label">Clasificación Sistémica</div>
-    <div class="metric-val" style="font-size:1rem;color:{color_hex};margin-top:0.4rem;">{clasificacion}</div>
+    <div class="metric-lbl">Clasificación Sistémica</div>
+    <div class="metric-val" style="font-size:.92rem;color:{color_hex};margin-top:.35rem;">{clasificacion}</div>
+    <div style="font-family:'DM Mono',monospace;font-size:.62rem;color:#2d3748;
+                letter-spacing:.08em;margin-top:.4rem;">Eje crítico: {dim_fractura}</div>
   </div>
 </div>
 """, unsafe_allow_html=True)
@@ -836,28 +986,30 @@ st.write("---")
 
 
 # ─────────────────────────────────────────────────────────
-#  GENERADOR DE DICTAMEN
+#  DICTAMEN
 # ─────────────────────────────────────────────────────────
 st.markdown(
-    "<div style='font-family:DM Mono,monospace;font-size:0.65rem;letter-spacing:0.18em;"
-    "text-transform:uppercase;color:#63b3ed;margin-bottom:0.3rem;'>— Centro de Inferencia Analítica Subnacional</div>"
-    "<p style='font-size:0.85rem;color:#4a5568;font-family:DM Sans,sans-serif;margin-bottom:1rem;'>"
-    "Presione el botón para emitir el dictamen regulatorio predictivo.</p>",
+    "<div class='section-label'>— Centro de Inferencia Analítica Subnacional</div>"
+    "<p class='section-caption'>"
+    "Presione el botón para emitir el dictamen regulatorio con políticas públicas aplicables."
+    "</p>",
     unsafe_allow_html=True
 )
 
 if st.button("↗ Interrogar Nodo Territorial · Desplegar Dictamen"):
     with st.spinner("Procesando vectores territoriales…"):
-        time.sleep(0.4)
+        time.sleep(0.35)
 
-    recs_items = "".join(
-        f'<li class="memo-rec-item">'
-        f'<span class="rec-num">0{i+1}</span>'
-        f'<span><strong style="color:#fff;font-family:DM Sans,sans-serif;">{titulo}.</strong>'
-        f'&ensp;<span style="color:#94a3b8;">{desc}</span></span>'
-        f'</li>'
-        for i, (titulo, desc) in enumerate(recs)
-    )
+    recs_html = ""
+    for i, (titulo, desc) in enumerate(recs):
+        recs_html += f"""
+        <li class="memo-rec-item">
+          <span class="rec-num">0{i+1}</span>
+          <div>
+            <div class="rec-title">{titulo}</div>
+            <div class="rec-body">{desc}</div>
+          </div>
+        </li>"""
 
     dictamen_html = f"""
     <div class="memo-shell" role="main" aria-label="Dictamen de Gobernanza Predictiva">
@@ -865,7 +1017,7 @@ if st.button("↗ Interrogar Nodo Territorial · Desplegar Dictamen"):
         <span class="memo-dot" style="background:#ef4444;"></span>
         <span class="memo-dot" style="background:#f59e0b;"></span>
         <span class="memo-dot" style="background:#10b981;"></span>
-        <span style="font-family:DM Mono,monospace;font-size:0.65rem;color:#2d3748;margin-left:0.6rem;">
+        <span class="memo-wintitle">
           SICE-{estado_selector[:3].upper()}-2026 · DICTAMEN REGULATORIO
         </span>
       </div>
@@ -874,28 +1026,42 @@ if st.button("↗ Interrogar Nodo Territorial · Desplegar Dictamen"):
         <div class="memo-ref">
           REF: SICE-{estado_selector[:3].upper()}-2026-RESOLVED &nbsp;·&nbsp;
           Entidad: {estado_selector} &nbsp;·&nbsp;
-          Emisión Experimental
+          GBI: {gbi_total:.1f}/100 &nbsp;·&nbsp; D: {dispersion_D:.2f}
         </div>
 
-        <div class="memo-section">Eje de Ruptura Multidimensional</div>
+        <div class="memo-sec">Eje de Ruptura Multidimensional Identificado</div>
         <div class="memo-finding" style="color:{color_hex};">{foco}</div>
 
-        <div class="memo-section">Evaluación Macrodinámica del Vector</div>
+        <div class="memo-sec">Evaluación Macrodinámica del Vector</div>
         <div class="memo-analysis" style="border-color:{color_hex};">{analisis}</div>
 
-        <div class="memo-section">Directrices Regulatorias de Diseño Institucional</div>
-        <ul class="memo-rec-list" aria-label="Recomendaciones">
-          {recs_items}
+        <div class="memo-sec">Directrices de Política Pública — Diseño Institucional</div>
+        <ul class="memo-rec-list" aria-label="Recomendaciones de política pública">
+          {recs_html}
         </ul>
 
         <div class="memo-footer">
-          Framework determinista de datos abiertos en fase de calibración.<br>
-          Respaldado por el portafolio empírico en Harvard Dataverse e indexado en SSRN (Elsevier)<br>
-          por la autora Laura Pamela Aranda Medrano, 2026. Todos los conceptos de alineación
-          estructural se desprenden del marco conceptual abierto de <em>The Balance Core</em>.
+          Framework determinista de datos abiertos en fase de calibración activa.<br>
+          Indexado en SSRN (Elsevier) por la autora Laura Pamela Aranda Medrano, 2026.<br>
+          Todos los conceptos de alineación estructural se desprenden del marco
+          conceptual abierto de <em>The Balance Core</em>.
         </div>
       </div>
     </div>
     """
     st.html(dictamen_html)
-    st.balloons()
+
+    # ── Mariposas Monarca ──────────────────────────────
+    mariposas_html = '<div class="butterfly-container" aria-hidden="true">'
+    for _ in range(30):
+        left  = random.randint(1, 97)
+        delay = round(random.uniform(0, 3.5), 2)
+        dur   = round(random.uniform(3.8, 7.0), 2)
+        size  = round(random.uniform(1.1, 2.3), 1)
+        mariposas_html += (
+            f'<div class="butterfly" style="left:{left}%;'
+            f'animation-duration:{dur}s;animation-delay:{delay}s;font-size:{size}rem;">'
+            f'<span>🦋</span></div>'
+        )
+    mariposas_html += "</div>"
+    st.markdown(mariposas_html, unsafe_allow_html=True)
